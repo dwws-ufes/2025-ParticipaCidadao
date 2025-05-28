@@ -1,0 +1,43 @@
+services:
+  mysql:
+    image: mysql
+    container_name: participacidadao-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: participacidadao
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - ${DATABASE_PATH}:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: participacidadao-phpmyadmin
+    ports:
+      - "8888:80"
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+      UPLOAD_LIMIT: 300M
+
+  app:
+    image: participacidadao
+    container_name: participacidadao-backfront
+    ports:
+      - "8080:8080" # Spring Boot
+      - "4200:4200" # Angular
+    build:
+      context: ./backfront
+      dockerfile: Dockerfile
+    volumes:
+      - ../participacidadao-backend:/app/participacidadao-backend
+      - ../participacidadao-frontend:/app/participacidadao-frontend
+    stdin_open: true
+

@@ -65,3 +65,4 @@ nbdist/
 # Arquivo de ajuda (geralmente não ignorado, mas está na sua lista)
 HELP.md
 
+*.env

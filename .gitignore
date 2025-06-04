@@ -66,3 +66,5 @@ nbdist/
 HELP.md
 
 *.env
+
+application.properties

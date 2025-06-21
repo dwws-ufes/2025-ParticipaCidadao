@@ -1,12 +1,19 @@
 package br.ufes.participacidadao.controllers;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.ufes.participacidadao.exceptions.UserNotFoundException;
 import br.ufes.participacidadao.models.UserModel;
 import br.ufes.participacidadao.repositories.UserRepository;
 
@@ -18,12 +25,39 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping("/new")
-    public UserModel registerUser(@RequestBody UserModel userModel) {
+    public UserModel createUser(@RequestBody UserModel userModel) {
+        int idade = Period.between(userModel.getBirthDate(), LocalDate.now()).getYears();
+        userModel.setAge(idade);
         return this.userRepository.save(userModel);
     }
 
-    @GetMapping("/new")
-    public String registerUser() {
-        return "Gugu";
+    @GetMapping("/{id}")
+    public UserModel getUser(@PathVariable Long id) {
+
+        if(!this.userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
+        return this.userRepository.findById(id).get();
+    }
+
+    @PutMapping("/{id}")
+    public UserModel updateUser(@PathVariable Long id, @RequestBody UserModel userModel) {
+
+        if(!this.userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
+        userModel.setId(id);
+        int idade = Period.between(userModel.getBirthDate(), LocalDate.now()).getYears();
+        userModel.setAge(idade);
+        return this.userRepository.save(userModel);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+
+        if(!this.userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
+        this.userRepository.deleteById(id);
     }
 }

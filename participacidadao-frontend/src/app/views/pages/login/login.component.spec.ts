@@ -13,9 +13,10 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [FormModule, CardModule, GridModule, ButtonModule, IconModule, LoginComponent],
-    providers: [IconSetService]
-})
+      declarations: [ LoginComponent ],
+      imports: [FormModule, CardModule, GridModule, ButtonModule, IconModule],
+      providers: [IconSetService]
+    })
     .compileComponents();
   });
 

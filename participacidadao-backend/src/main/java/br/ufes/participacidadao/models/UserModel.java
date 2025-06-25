@@ -39,9 +39,6 @@ public class UserModel {
     @Column(nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false)
-    private int age;
-
     // ===================================================================================================
     // Getters and Setters
     // ===================================================================================================
@@ -74,7 +71,4 @@ public class UserModel {
 
     public void setBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
 
-    public int getAge() { return age; }
-
-    public void setAge(int age) { this.age = age; }
 }

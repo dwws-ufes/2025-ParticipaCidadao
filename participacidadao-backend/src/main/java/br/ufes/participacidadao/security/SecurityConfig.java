@@ -13,6 +13,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+
+import javax.sql.DataSource;
+import org.springframework.security.core.userdetails.jdbc.JdbcUserDetailsManager;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -35,12 +44,24 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(this.corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.POST, "users/new").permitAll()
-                .requestMatchers(HttpMethod.GET, "auth/check").authenticated()
+                .requestMatchers(HttpMethod.POST, "/users/new").permitAll()
+                .requestMatchers(HttpMethod.GET, "/auth/check").authenticated()
                 .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new InMemoryUserDetailsManager(
+            User.withUsername("user@example.com")
+                .password("{noop}123456") // {noop} means no encoding
+                .roles("USER")
+                .build()
+        );
+    }
+
+
+    
 }

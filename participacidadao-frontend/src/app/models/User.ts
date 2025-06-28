@@ -1,6 +1,6 @@
 import { Role } from "./enums/role.enum"
 
-export default class Woman {
+export default class User {
 
     public name?: string;
     public email?: string;

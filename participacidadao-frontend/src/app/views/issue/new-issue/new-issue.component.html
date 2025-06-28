@@ -1,0 +1,90 @@
+<c-card>
+    
+    <c-card-header>
+        <strong> &nbsp; Novo Problema</strong>
+    </c-card-header>
+
+    <c-card-body>
+        <form cForm (ngSubmit)="onSubmit()" [formGroup]="issueForm">
+            <c-container>
+                <c-row>
+                    <c-col [md]="5">
+                        <label for="title">Título</label>
+                        <input
+                            id="title"
+                            type="text"
+                            formControlName="title"
+                            cFormControl
+                        >
+                    </c-col>
+                    <c-col>
+                        <label for="description">Descrição do problema</label>
+                        <textarea 
+                            id="description"
+                            formControlName="description"
+                            cFormControl
+                        >
+                        </textarea>
+                    </c-col>
+                </c-row>
+                <c-row class="mt-md-3 d-flex align-items-center">
+                    <c-col>
+                        <c-card class="ps-2 pt-2">
+                            <strong class="mb-0 p-0">&nbsp; Endereço do Problema</strong>
+                            <c-card-body class="d-flex flex-row gap-2 pt-1">
+                                <c-col>
+                                    <label for="city">Cidade</label>
+                                    <input
+                                        id="city" 
+                                        type="text"
+                                        formControlName="city"
+                                        cFormControl
+                                    >
+                                </c-col>
+                                <c-col>
+                                    <label for="city">Bairro</label>
+                                    <input
+                                        id="city" 
+                                        type="text"
+                                        formControlName="neighborhood"
+                                        cFormControl
+                                    >
+                                </c-col>
+                                <c-col>
+                                    <label for="street">Rua</label>
+                                    <input
+                                        id="street"
+                                        type="text"
+                                        formControlName="street"
+                                        cFormControl
+                                    >
+                                </c-col>
+                                <c-col>
+                                    <label for="refPoint">Ponto de Referência</label>
+                                    <textarea 
+                                        id="refPoint"
+                                        formControlName="refPoint"
+                                        cFormControl
+                                    >
+                                    </textarea>
+                                </c-col>
+                            </c-card-body>
+                        </c-card>
+                    </c-col>
+                </c-row>
+
+                <div class="d-grid gap-2 d-flex justify-content-end mt-md-4">
+                    <button
+                        cButton
+                        type="submit"
+                        class="btn btn-success btn-block pad-btn"
+                    >
+                        &nbsp; Criar Novo Problema
+                    </button>
+                </div>
+            </c-container>
+        </form>
+    </c-card-body>
+
+</c-card>
+

@@ -39,10 +39,16 @@ public class IssueModel {
     private LocalDate createdAt;
 
     @Column(nullable = false)
-    private float latitude;
+    private String street;
 
     @Column(nullable = false)
-    private float longitude;
+    private String city;
+
+    @Column(nullable = false)
+    private String neighborhood;
+
+    @Column(nullable = false)
+    private String refPoint;
 
     @ManyToOne
     @JoinColumn(name = "created_by")
@@ -76,15 +82,23 @@ public class IssueModel {
 
     public void setCreatedAt(LocalDate createdAt) { this.createdAt = createdAt; }
 
-    public float getLatitude() { return latitude; }
+    public String getStreet() { return street; }
 
-    public void setLatitude(float latitude) { this.latitude = latitude; }
+    public void setStreet(String street) { this.street = street; }
 
-    public float getLongitude() { return longitude; }
+    public String getCity() { return city; }
 
-    public void setLongitude(float longitude) { this.longitude = longitude; }
+    public void setCity(String city) { this.city = city; }
+
+    public String getRefPoint() { return refPoint; }
+
+    public void setRefPoint(String refPoint) { this.refPoint = refPoint; }
 
     public UserModel getCreatedBy() { return createdBy; }
 
     public void setCreatedBy(UserModel createdBy) { this.createdBy = createdBy; }
+
+    public String getNeighborhood() { return neighborhood; }
+
+    public void setNeighborhood(String neighborhood) { this.neighborhood = neighborhood; }
 }

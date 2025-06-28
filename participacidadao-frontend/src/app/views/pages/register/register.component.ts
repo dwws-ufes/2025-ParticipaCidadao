@@ -31,6 +31,10 @@ export class RegisterComponent {
   constructor(private userService: UserService, private router: Router) { }
 
   onSubmit() {
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
     console.log(this.registerForm.value);
     this.user = new User(this.registerForm.value);
     this.userService.register(this.user).subscribe({

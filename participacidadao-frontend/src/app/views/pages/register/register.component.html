@@ -13,34 +13,57 @@
                 </span>
                 <input autoComplete="name" cFormControl placeholder="Nome" formControlName="name"/>
               </c-input-group>
+              <div *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched)" class="text-danger mb-2">
+                <div *ngIf="registerForm.get('name')?.errors?.['required']">Nome é obrigatório.</div>
+              </div>
               <c-input-group class="mb-3">
                 <span cInputGroupText>&#64;</span>
                 <input autoComplete="email" cFormControl placeholder="E-mail" formControlName="email"/>
               </c-input-group>
+              <div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)" class="text-danger mb-2">
+                <div *ngIf="registerForm.get('email')?.errors?.['required']">E-mail é obrigatório.</div>
+                <div *ngIf="registerForm.get('email')?.errors?.['email']">E-mail inválido.</div>
+              </div>
               <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilPlaylistAdd"></svg>
                 </span>
                 <input autoComplete="cpf" cFormControl placeholder="CPF" formControlName="cpf"/>
               </c-input-group>
+              <div *ngIf="registerForm.get('cpf')?.invalid && (registerForm.get('cpf')?.dirty || registerForm.get('cpf')?.touched)" class="text-danger mb-2">
+                <div *ngIf="registerForm.get('cpf')?.errors?.['required']">CPF é obrigatório.</div>
+              </div>
               <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilBaby"></svg>
                 </span>
                 <input type="date" autoComplete="birth-date" cFormControl placeholder="Data de Nascimento" formControlName="birthDate"/>
               </c-input-group>
+              <div *ngIf="registerForm.get('birthDate')?.invalid && (registerForm.get('birthDate')?.dirty || registerForm.get('birthDate')?.touched)" class="text-danger mb-2">
+                <div *ngIf="registerForm.get('birthDate')?.errors?.['required']">Data de nascimento é obrigatória.</div>
+              </div>
               <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilLockLocked"></svg>
                 </span>
                 <input autoComplete="new-password" cFormControl placeholder="Senha" type="password" formControlName="password"/>
               </c-input-group>
+              <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)" class="text-danger mb-2">
+                <div *ngIf="registerForm.get('password')?.errors?.['required']">Senha é obrigatória.</div>
+                <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres.</div>
+              </div>
               <c-input-group class="mb-4">
                 <span cInputGroupText>
                   <svg cIcon name="cilLockLocked"></svg>
                 </span>
                 <input autoComplete="new-password" cFormControl placeholder="Repetir Senha" type="password" formControlName="repeatPassword"/>
               </c-input-group>
+              <div *ngIf="registerForm.get('repeatPassword')?.invalid && (registerForm.get('repeatPassword')?.dirty || registerForm.get('repeatPassword')?.touched)" class="text-danger mb-2">
+                <div *ngIf="registerForm.get('repeatPassword')?.errors?.['required']">Confirmação de senha é obrigatória.</div>
+              </div>
+              <div *ngIf="(registerForm.hasError('passwordMismatch') && (registerForm.get('repeatPassword')?.dirty || registerForm.get('repeatPassword')?.touched))" class="text-danger mb-2">
+                As senhas não coincidem.
+              </div>
               <div class="d-grid">
                 <button 
                   type="submit" 

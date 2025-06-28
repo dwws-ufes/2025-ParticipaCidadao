@@ -8,6 +8,7 @@
               <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <h1>Login</h1>
                 <p class="text-body-secondary">Faça login para continuar</p>
+                <div *ngIf="loginError" class="alert alert-danger">E-mail ou senha incorretos.</div>
                 <c-input-group class="mb-3">
                   <span cInputGroupText>&#64;</span>
                   <input autoComplete="email" placeholder="E-mail" formControlName="email" />

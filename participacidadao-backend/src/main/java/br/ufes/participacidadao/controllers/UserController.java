@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.ufes.participacidadao.exceptions.UserNotFoundException;
 import br.ufes.participacidadao.models.UserModel;
@@ -22,9 +23,14 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/new")
     public UserModel createUser(@RequestBody UserModel userModel) {
+        // Encode the password before saving
+        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
         return this.userRepository.save(userModel);
     }
 

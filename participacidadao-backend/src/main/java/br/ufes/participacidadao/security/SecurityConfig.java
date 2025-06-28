@@ -16,17 +16,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-
-
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
-//import org.springframework.security.core.userdetails.jdbc.JdbcUserDetailsManager;
+import java.sql.*;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private DataSource dataSource;
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
@@ -60,14 +66,32 @@ public class SecurityConfig {
     }
     @Bean
     public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(
-            User.withUsername("user@example.com")
-                .password("{noop}123456") // {noop} means no encoding
-                .roles("USER")
-                .build()
-        );
+        return email -> {
+            try (Connection conn = dataSource.getConnection()) {
+                PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT email, password, role FROM users WHERE email = ?"
+                );
+                stmt.setString(1, email);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    String password = rs.getString("password");
+                    String role = rs.getString("role");
+                    return User.withUsername(email)
+                            .password(password)
+                            .roles(role.replace("ROLE_", ""))
+                            .build();
+                } else {
+                    throw new UsernameNotFoundException("User not found");
+                }
+            } catch (SQLException e) {
+                throw new UsernameNotFoundException("Database error");
+            }
+        };
     }
-
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     
 }

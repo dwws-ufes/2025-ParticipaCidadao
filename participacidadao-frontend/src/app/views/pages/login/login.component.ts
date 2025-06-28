@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,8 @@ loginError: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -28,7 +30,7 @@ onSubmit() {
       this.authService.login(email, password).subscribe({
         next: () => {
           // Handle successful login
-          console.log('Conectado com sucesso');
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           // Handle login error

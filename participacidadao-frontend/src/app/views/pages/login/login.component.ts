@@ -28,12 +28,11 @@ onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
-        next: () => {
-          // Handle successful login
+        next: (response) => {
+          // Successful login if we get here
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
-          // Handle login error
           this.loginError = 'E-mail ou senha inválidos.';
           console.error('Login error:', error);
         }

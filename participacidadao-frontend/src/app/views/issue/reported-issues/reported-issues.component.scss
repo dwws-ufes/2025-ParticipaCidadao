@@ -1,0 +1,15 @@
+@import '../../../../../node_modules/bootstrap/scss/bootstrap';
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  margin-bottom: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 1rem;
+}
+.alert {
+  margin-top: 1rem;
+}

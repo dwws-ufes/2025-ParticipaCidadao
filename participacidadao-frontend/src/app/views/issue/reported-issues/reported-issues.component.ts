@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { IssueService } from '../../../services/issue.service';
+import { IssueService } from '../../services/issue.service';
 
 @Component({
-  selector: 'app-user-issues',
-  templateUrl: './user-issues.component.html',
-  styleUrls: ['./user-issues.component.scss']
+  selector: 'app-reported-issues',
+  templateUrl: './reported-issues.component.html',
+  styleUrls: ['./reported-issues.component.scss']
 })
-export class UserIssuesComponent implements OnInit {
+export class ReportedIssuesComponent implements OnInit {
   issues: any[] = [];
   error: string | null = null;
 

@@ -16,4 +16,10 @@ export class IssueService {
     if (!headers) throw new Error('Not authenticated');
     return this.http.post(`${this.apiUrl}/new`, issue, { headers });
   }
+
+  getIssues(): Observable<any[]> {
+    const headers = this.authService.getAuthHeaders();
+    if (!headers) throw new Error('Not authenticated');
+    return this.http.get<any[]>(this.apiUrl, { headers });
+  }
 }

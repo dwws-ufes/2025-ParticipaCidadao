@@ -12,6 +12,8 @@ export class NewIssueComponent {
 
   public issue?: Issue;
   public issueForm!: FormGroup;
+  public successMessage: string | null = null;
+  public errorMessage: string | null = null;
 
   constructor(private formBuilder: FormBuilder, private issueService: IssueService) {
     this.createForm();
@@ -31,6 +33,8 @@ export class NewIssueComponent {
   }
 
   public onSubmit() {
+    this.successMessage = null;
+    this.errorMessage = null;
     console.log('Submitting issue form', this.issueForm.value, 'Valid:', this.issueForm.valid);
     if (this.issueForm.valid) {
       const formValue = this.issueForm.value;
@@ -44,11 +48,14 @@ export class NewIssueComponent {
       console.log('Payload sent:', issueData);
       this.issueService.createIssue(issueData).subscribe({
         next: (res) => {
-          // handle success, e.g., show a message or redirect
+          this.successMessage = 'Problema criado com sucesso!';
+          this.issueForm.reset();
+          // Optionally, reset createdBy to default value
+          this.issueForm.patchValue({ createdBy: '1' });
           console.log('Issue created:', res);
         },
         error: (err) => {
-          // handle error
+          this.errorMessage = 'Erro ao criar o problema.';
           console.error('Error creating issue:', err);
         }
       });

@@ -5,6 +5,8 @@
     </c-card-header>
 
     <c-card-body>
+        <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
         <form cForm (ngSubmit)="onSubmit()" [formGroup]="issueForm">
             <c-container>
                 <c-row>

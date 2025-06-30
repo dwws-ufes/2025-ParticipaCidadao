@@ -1,4 +1,60 @@
-<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+<div class="min-vh-100 d-flex flex-row align-items-center">
+  <c-container class="d-flex flex-row align-items-center justify-content-around">
+    <img src="assets/img/login.svg" alt="Login Image" class="img-fluid mb-4" style="max-width: 50%; height: auto;">
+    <c-col class="d-flex flex-column align-items-center">
+      <img src="assets/img/brand/ParticipaCidadao.svg" alt="ParticipaCidadao Logo" class="mb-4"
+        style="max-width: 200px; height: auto;">
+      <c-card-group class="d-flex flex-column align-items-center w-75">
+        <div class="w-100">
+          <c-card-body>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
+              <h1>Login</h1>
+              <p class=" text-body-secondary">Faça login para continuar</p>
+              <div *ngIf="loginError" class="alert alert-danger">E-mail ou senha incorretos.</div>
+              <c-input-group class="mb-3 w-75">
+                <input autoComplete="email" placeholder="E-mail" formControlName="email"
+                  class="rounded border border-secundary p-2 w-100" />
+              </c-input-group>
+              <c-input-group class="mb-4 w-75">
+                <input autoComplete="current-password" placeholder="Senha" type="password" formControlName="password"
+                  class="rounded border border-secundary p-2 w-100" />
+              </c-input-group>
+              <c-col class="d-flex flex-column align-items-center w-75">
+                <c-col xs="6" class="d-flex justify-content-center">
+                  <button cButton class="px-4 w-75" color="primary" type="submit">
+                    Login
+                  </button>
+                </c-col>
+                <c-col class="text-center" xs="6">
+                  <button cButton class="px-0" color="link">
+                    Esqueceu a senha?
+                  </button>
+                </c-col>
+              </c-col>
+            </form>
+          </c-card-body>
+        </div>
+        <div class="pt-4">
+          <img src="assets/img/Line.svg" alt="">
+          <c-card [ngStyle]="{'minWidth.%': 44}" class="border-0">
+            <c-card-body class="text-center">
+              <div>
+                <p>
+                  Não tem uma conta?
+                  <button [active]="true" cButton color="secondary" routerLink="/register">
+                    Cadastrar!
+                  </button>
+                </p>
+              </div>
+            </c-card-body>
+          </c-card>
+        </div>
+      </c-card-group>
+    </c-col>
+  </c-container>
+</div>
+
+<!-- <div class="bg-light min-vh-100 d-flex flex-row align-items-center">
   <c-container>
     <c-row class="justify-content-center">
       <c-col md="8">
@@ -17,7 +73,8 @@
                   <span cInputGroupText>
                     <svg cIcon name="cilLockLocked"></svg>
                   </span>
-                  <input autoComplete="current-password" placeholder="Senha" type="password" formControlName="password" />
+                  <input autoComplete="current-password" placeholder="Senha" type="password"
+                    formControlName="password" />
                 </c-input-group>
                 <c-row>
                   <c-col xs="6">
@@ -51,4 +108,4 @@
       </c-col>
     </c-row>
   </c-container>
-</div>
+</div> -->

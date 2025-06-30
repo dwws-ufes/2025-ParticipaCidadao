@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 export class IssueService {
   private apiUrl = 'http://localhost:8080/issues';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   createIssue(issue: any): Observable<any> {
     const headers = this.authService.getAuthHeaders();

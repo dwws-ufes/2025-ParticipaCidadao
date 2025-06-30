@@ -10,7 +10,7 @@ export class AuthService {
     private apiUrl = 'http://localhost:8080/users';
     private credentials: { email: string, password: string } | null = null;
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     login(email: string, password: string) {
         this.credentials = { email, password };

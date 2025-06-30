@@ -11,7 +11,7 @@ export class UserService {
 
     private apiUrl = 'http://localhost:8080/users';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     register(user: User): Observable<any> {
         return this.http.post(`${this.apiUrl}/new`, user);

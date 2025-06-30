@@ -1,5 +1,5 @@
 <c-card>
-    
+
     <c-card-header>
         <strong> &nbsp; Novo Problema</strong>
     </c-card-header>
@@ -12,20 +12,11 @@
                 <c-row>
                     <c-col [md]="5">
                         <label for="title">Título</label>
-                        <input
-                            id="title"
-                            type="text"
-                            formControlName="title"
-                            cFormControl
-                        >
+                        <input id="title" type="text" formControlName="title" cFormControl>
                     </c-col>
                     <c-col>
                         <label for="description">Descrição do problema</label>
-                        <textarea 
-                            id="description"
-                            formControlName="description"
-                            cFormControl
-                        >
+                        <textarea id="description" formControlName="description" cFormControl>
                         </textarea>
                     </c-col>
                 </c-row>
@@ -36,38 +27,19 @@
                             <c-card-body class="d-flex flex-row gap-2 pt-1">
                                 <c-col>
                                     <label for="city">Cidade</label>
-                                    <input
-                                        id="city" 
-                                        type="text"
-                                        formControlName="city"
-                                        cFormControl
-                                    >
+                                    <input id="city" type="text" formControlName="city" cFormControl>
                                 </c-col>
                                 <c-col>
                                     <label for="city">Bairro</label>
-                                    <input
-                                        id="city" 
-                                        type="text"
-                                        formControlName="neighborhood"
-                                        cFormControl
-                                    >
+                                    <input id="city" type="text" formControlName="neighborhood" cFormControl>
                                 </c-col>
                                 <c-col>
                                     <label for="street">Rua</label>
-                                    <input
-                                        id="street"
-                                        type="text"
-                                        formControlName="street"
-                                        cFormControl
-                                    >
+                                    <input id="street" type="text" formControlName="street" cFormControl>
                                 </c-col>
                                 <c-col>
                                     <label for="refPoint">Ponto de Referência</label>
-                                    <textarea 
-                                        id="refPoint"
-                                        formControlName="refPoint"
-                                        cFormControl
-                                    >
+                                    <textarea id="refPoint" formControlName="refPoint" cFormControl>
                                     </textarea>
                                 </c-col>
                             </c-card-body>
@@ -76,11 +48,7 @@
                 </c-row>
 
                 <div class="d-grid gap-2 d-flex justify-content-end mt-md-4">
-                    <button
-                        cButton
-                        type="submit"
-                        class="btn btn-success btn-block pad-btn"
-                    >
+                    <button cButton type="submit" class="btn btn-success btn-block pad-btn">
                         &nbsp; Criar Novo Problema
                     </button>
                 </div>
@@ -89,4 +57,3 @@
     </c-card-body>
 
 </c-card>
-

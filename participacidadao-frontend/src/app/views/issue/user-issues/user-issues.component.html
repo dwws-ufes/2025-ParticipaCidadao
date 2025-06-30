@@ -1,8 +1,27 @@
 <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-<ul *ngIf="issues.length">
-  <li *ngFor="let issue of issues">
-    <strong>{{ issue.title }}</strong> - {{ issue.description }}<br>
-    <small>{{ issue.city }}, {{ issue.neighborhood }} ({{ issue.status }})</small>
-  </li>
-</ul>
-<div *ngIf="!issues.length && !error">Nenhum problema relatado.</div>
+<div>
+  <h2>Problemas Relatados</h2>
+  <p>Veja abaixo os problemas que você relatou:</p>
+  <div *ngIf="issues.length">
+    <div *ngFor="let issue of issues" class="d-flex flex-column h-auto bg-white p-3 rounded border mb-4 shadow-sm">
+      <div class="d-flex align-items-center mb-2">
+        <img src="assets/img/report.svg" alt="" class="img-fluid mb-2" style="width: 45px;" />
+        <strong>{{ issue.title }}</strong>
+      </div>
+      <p>{{ issue.description }}</p>
+      <div class="d-flex flex-row gap-2">
+        <img src="assets/img/pin.svg" alt="" class="img-fluid" style="width: 20px;" />
+        <div class="d-flex justify-content-between flex-grow-1">
+          <small>{{ issue.city }}, {{ issue.neighborhood }}</small>
+          <strong>({{ issue.status }})</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!issues.length && !error" class="mb-2">Nenhum problema relatado.</div>
+  <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+    <c-button cButton class="btn btn-primary" routerLink="/issue/new">
+      &nbsp; Relatar Novo Problema
+    </c-button>
+  </div>
+</div>

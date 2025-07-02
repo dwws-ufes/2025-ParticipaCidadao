@@ -58,16 +58,26 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserModel updateUser(@PathVariable Long id, @RequestBody UserModel userModel) {
-        if(!this.userRepository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
-        userModel.setId(id);
-        // Always encode the password before saving (if not already encoded)
-        String password = userModel.getPassword();
-        if (password != null && !password.startsWith("$2a$") && !password.startsWith("$2b$") && !password.startsWith("$2y$")) {
-            userModel.setPassword(passwordEncoder.encode(password));
-        }
-        return this.userRepository.save(userModel);
+        // if(!this.userRepository.existsById(id)) {
+        //     throw new UserNotFoundException(id);
+        // }
+        // userModel.setId(id);
+        // // Always encode the password before saving (if not already encoded)
+        // String password = userModel.getPassword();
+        // if (password != null && !password.startsWith("$2a$") && !password.startsWith("$2b$") && !password.startsWith("$2y$")) {
+        //     userModel.setPassword(passwordEncoder.encode(password));
+        // }
+        // return this.userRepository.save(userModel);
+
+        UserModel existing = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        
+        existing.setName(userModel.getName());
+        existing.setEmail(userModel.getEmail());
+        existing.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        existing.setCpf(userModel.getCpf());
+        existing.setBirthDate(userModel.getBirthDate());
+
+        return this.userRepository.save(existing);
     }
 
     @DeleteMapping("/{id}")

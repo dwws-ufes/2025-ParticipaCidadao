@@ -1,0 +1,54 @@
+# Relatório de Desenvolvimento - Trabalho 2 (T2) - ParticipaCidadao
+
+## Introdução
+Este documento descreve as principais alterações, decisões técnicas e justificativas realizadas durante o desenvolvimento da aplicação web ParticipaCidadao, conforme os requisitos do Trabalho 2 da disciplina. O projeto foi desenvolvido utilizando frameworks modernos para cada camada, com gerenciamento de dependências via Maven e integração contínua entre backend (Java Spring Boot) e frontend (Angular).
+
+## Frameworks Utilizados
+- **Decoração:** Utilização de componentes Angular para estruturação visual e reutilização de layouts.
+- **Front-end:** Angular, com TypeScript, para construção de uma interface SPA responsiva e moderna.
+- **Injeção de Dependências:** Spring Boot (Java) e CDI (Angular) para gerenciamento de beans e serviços.
+- **Mapeamento Objeto/Relacional:** JPA (Java Persistence API) com Spring Data JPA para persistência dos dados em MySQL.
+- **Segurança:** Spring Security com autenticação HTTP Basic, bcrypt para hash de senhas e controle de acesso a endpoints.
+- **Gerenciamento de Dependências:** Maven para backend Java, npm para frontend Angular.
+
+## Principais Alterações e Justificativas
+
+### Backend (Java Spring Boot)
+- **Configuração de CORS:** Ajuste para permitir requisições do Angular (localhost:4200), facilitando o desenvolvimento e integração frontend-backend.
+- **Autenticação baseada em banco de dados:** Implementação de um `UserDetailsService` customizado e uso de `BCryptPasswordEncoder` para garantir segurança das senhas.
+- **Endpoints REST:** Criação de endpoints para registro, autenticação, atualização e listagem de usuários, além de endpoints para criação e listagem de problemas urbanos.
+- **Validação e tratamento de erros:** Inclusão de validações e mensagens de erro claras para feedback ao usuário.
+- **Atualização de usuário:** Implementação do endpoint de atualização de dados do usuário, com codificação da senha sempre que alterada, garantindo integridade e segurança.
+- **Repositórios JPA:** Criação de métodos customizados como `findByEmail` para facilitar operações de autenticação e busca.
+- **Documentação e organização:** Separação clara de controllers, models e repositórios, facilitando manutenção e entendimento do código.
+
+### Frontend (Angular)
+- **Formulários reativos:** Uso de Reactive Forms para registro, login e atualização de usuário, com validação de campos obrigatórios e feedback visual.
+- **Serviços Angular:** Criação de `AuthService`, `UserService` e `IssueService` para centralizar lógica de comunicação com o backend e autenticação.
+- **Autenticação HTTP Basic:** Envio do header Authorization em todas as requisições protegidas, garantindo acesso seguro aos endpoints.
+- **Interface limpa e objetiva:** Redução do menu lateral para apenas as opções essenciais (Usuário, Problemas Urbanos, Configurações), tornando a navegação mais intuitiva.
+- **Feedback ao usuário:** Mensagens de confirmação e erro após ações como registro, login, criação e atualização de problemas.
+- **Internacionalização:** Relatório e documentação disponíveis em português e inglês, conforme solicitado.
+
+### Docker e Deploy
+- **Docker Compose:** Configuração de containers para backend, frontend, banco de dados MySQL e phpMyAdmin, facilitando o deploy e testes integrados.
+- **Ajustes de inicialização:** Correção de problemas de dependência entre containers (ex: backend aguardando banco de dados).
+
+## Justificativas das Alterações
+- **Segurança:** Uso de bcrypt e autenticação HTTP Basic para proteger dados sensíveis e garantir boas práticas.
+- **Facilidade de uso:** Interface enxuta, validação de formulários e feedbacks visuais melhoram a experiência do usuário.
+- **Manutenção e escalabilidade:** Separação de responsabilidades, uso de frameworks e boas práticas facilitam futuras evoluções do sistema.
+- **Conformidade com requisitos:** Todas as alterações visam atender aos critérios do trabalho, demonstrando domínio dos frameworks e integração entre as camadas.
+
+## Contribuição dos membros
+Cada membro contribuiu em diferentes partes do projeto, incluindo implementação de funcionalidades, correção de bugs, configuração de ambiente, testes e documentação, conforme registrado no histórico do repositório GitHub.
+
+## Como executar
+1. Clone o repositório do GitHub.
+2. Execute `docker-compose up` na raiz do projeto para subir todos os serviços.
+3. Acesse o frontend em `http://localhost:4200` e o backend em `http://localhost:8080`.
+4. Utilize o phpMyAdmin em `http://localhost:8081` para gerenciar o banco de dados.
+
+---
+
+Este relatório cobre todas as principais decisões e justificativas do desenvolvimento do ParticipaCidadao para o T2.

@@ -28,8 +28,9 @@ onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
-        next: (response) => {
-          // Successful login if we get here
+        next: (response: any) => {
+          // Save user info for later use
+          this.authService.setCurrentUser(response);
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

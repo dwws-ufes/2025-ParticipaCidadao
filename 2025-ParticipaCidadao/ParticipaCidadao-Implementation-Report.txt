@@ -1,0 +1,381 @@
+ParticipaCidadao Project: Implementation & Fixes Report
+========================================================
+
+This document summarizes the key changes made to the ParticipaCidadao web application, including code snippets and explanations for each major step.
+
+1. User Authentication & Registration
+-------------------------------------
+- **Backend:**
+  - Switched from in-memory to database-backed authentication using Spring Security.
+  - Added password encoding with BCrypt for secure storage:
+    ```java
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    ```
+  - Registration endpoint encodes passwords before saving:
+    ```java
+    @PostMapping("/new")
+    public UserModel createUser(@RequestBody UserModel userModel) {
+        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        return this.userRepository.save(userModel);
+    }
+    ```
+  - Custom `UserDetailsService` loads users by email from the database for authentication.
+
+- **Frontend:**
+  - Login and registration forms require all fields to be filled and valid before submission.
+  - User-friendly validation messages for all required fields (e.g., email, password, name, CPF, birth date).
+  - After successful registration, users are redirected to the login page.
+
+**Why:**
+To provide secure, database-backed authentication and a user-friendly registration/login experience.
+
+2. CORS and API Connectivity
+----------------------------
+- **Backend:**
+  - Fixed CORS configuration to allow frontend-backend communication during development:
+    ```java
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
+    ```
+
+**Why:**
+To allow the Angular frontend (localhost:4200) to communicate with the Spring Boot backend (localhost:8080) without CORS errors.
+
+3. Issue Creation (Novo Problema)
+---------------------------------
+- **Backend:**
+  - Created `IssueController` with a `/issues/new` POST endpoint to receive and save new issues:
+    ```java
+    @RestController
+    @RequestMapping("/issues")
+    public class IssueController {
+        @Autowired
+        private IssueRepository issueRepository;
+        @PostMapping("/new")
+        public IssueModel createIssue(@RequestBody IssueModel issueModel) {
+            return this.issueRepository.save(issueModel);
+        }
+    }
+    ```
+  - Used a JPA repository for database persistence:
+    ```java
+    public interface IssueRepository extends JpaRepository<IssueModel, Long> {}
+    ```
+
+- **Frontend:**
+  - Created `IssueService` to send new issues to the backend:
+    ```typescript
+    @Injectable({ providedIn: 'root' })
+    export class IssueService {
+      private apiUrl = 'http://localhost:8080/issues';
+      constructor(private http: HttpClient) {}
+      createIssue(issue: any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/new`, issue);
+      }
+    }
+    ```
+  - Updated the "Novo problema" form component to use the service and submit data only if the form is valid:
+    ```typescript
+    public onSubmit() {
+      if (this.issueForm.valid) {
+        this.issueService.createIssue(this.issueForm.value).subscribe({
+          next: (res) => { /* handle success */ },
+          error: (err) => { /* handle error */ }
+        });
+      } else {
+        this.issueForm.markAllAsTouched();
+      }
+    }
+    ```
+
+**Why:**
+To allow users to create and save new issues from the frontend, storing them in the database just like user registration.
+
+4. General Improvements
+-----------------------
+- Added clear validation and error messages to all forms.
+- Ensured all required fields are enforced both in the UI and backend.
+- Provided code and explanations for every step, so you understand the changes and can maintain/extend the app.
+
+5. Issue Creation Security Update
+---------------------------------
+- **Backend:**
+  - Updated `SecurityConfig` to require authentication for creating issues:
+    ```java
+    .requestMatchers(HttpMethod.POST, "/issues/new").authenticated()
+    ```
+  - Now, only logged-in users can create new issues. Unauthenticated requests to `/issues/new` will receive a 401 Unauthorized error.
+
+**Why:**
+To ensure only authenticated users can create issues, improving security and accountability in the system.
+
+6. Issue Creation: Frontend Authenticated Request
+-------------------------------------------------
+- **Frontend:**
+  - Updated `IssueService` to send credentials (cookies/session) with the createIssue request:
+    ```typescript
+    return this.http.post(`${this.apiUrl}/new`, issue, { withCredentials: true });
+    ```
+  - This ensures the backend receives the user's authentication and allows only logged-in users to create issues.
+
+**Why:**
+To comply with backend security and ensure only authenticated users can create issues from the frontend.
+
+7. Final Auth & Issue Creation Flow (June 2025)
+-----------------------------------------------
+- **Backend:**
+  - Authentication uses HTTP Basic Auth with credentials checked against the database.
+  - Only authenticated users can create issues (`/issues/new` is protected).
+  - The backend expects all required fields for `IssueModel`, including:
+    - `title`, `description`, `street`, `city`, `neighborhood`, `refPoint`, `imageUrl`, `status`, `createdAt`, and `createdBy` (as an object with an `id`).
+  - The `status` field must be one of: `'EM_ANDAMENTO'`, `'REPORTADO'`, or `'RESOLVIDO'`.
+
+- **Frontend:**
+  - User logs in once; credentials are stored in `AuthService` and used for all protected requests.
+  - The issue creation form no longer asks for email or password.
+  - On submit, the frontend sends all required fields, including:
+    - `imageUrl: 'default.jpg'` (placeholder)
+    - `status: 'REPORTADO'` (default for new issues)
+    - `createdAt: <today's date>` (in `yyyy-MM-dd` format)
+    - `createdBy: { id: <logged-in user id> }` (currently hardcoded or set by form, but should be set from login info for production)
+  - If the user is not authenticated, issue creation is blocked and an error is shown.
+
+**Why:**
+To ensure robust, secure, and user-friendly issue creation, with all backend requirements satisfied and a smooth login experience for users.
+
+8. Issue Listing and Confirmation (June 2025)
+----------------------------------------------
+- **Backend:**
+  - Added a GET `/issues` endpoint to `IssueController` to return all issues for listing:
+    ```java
+    @GetMapping
+    public List<IssueModel> getAllIssues() {
+        return issueRepository.findAll();
+    }
+    ```
+
+- **Frontend:**
+  - Added `getIssues()` to `IssueService` to fetch the list of issues from the backend:
+    ```typescript
+    getIssues(): Observable<any[]> {
+      const headers = this.authService.getAuthHeaders();
+      if (!headers) throw new Error('Not authenticated');
+      return this.http.get<any[]>(this.apiUrl, { headers });
+    }
+    ```
+  - Implemented the "Problemas relatados" page (UserIssuesComponent) to display the list of issues with error handling.
+  - After creating a new issue, a confirmation message is shown and the form fields are cleared for a better user experience.
+
+**Why:**
+To allow users to view all reported issues and provide clear feedback after submitting a new issue, improving usability and transparency.
+
+---
+
+ParticipaCidadao Projeto: Relatório de Implementação e Correções
+===============================================================
+
+Este documento resume as principais mudanças feitas no aplicativo web ParticipaCidadao, incluindo trechos de código e explicações para cada etapa importante.
+
+1. Autenticação e Registro de Usuário
+-------------------------------------
+- **Backend:**
+  - Mudança de autenticação em memória para autenticação baseada em banco de dados usando Spring Security.
+  - Adicionado armazenamento seguro de senhas com BCrypt:
+    ```java
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    ```
+  - Endpoint de registro codifica a senha antes de salvar:
+    ```java
+    @PostMapping("/new")
+    public UserModel createUser(@RequestBody UserModel userModel) {
+        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        return this.userRepository.save(userModel);
+    }
+    ```
+  - `UserDetailsService` customizado carrega usuários pelo e-mail do banco de dados para autenticação.
+
+- **Frontend:**
+  - Formulários de login e registro exigem todos os campos preenchidos e válidos antes do envio.
+  - Mensagens de validação amigáveis para todos os campos obrigatórios (e-mail, senha, nome, CPF, data de nascimento).
+  - Após o registro bem-sucedido, o usuário é redirecionado para a tela de login.
+
+**Por quê:**
+Para fornecer autenticação segura baseada em banco de dados e uma experiência de registro/login amigável.
+
+2. CORS e Conectividade da API
+-----------------------------
+- **Backend:**
+  - Corrigida a configuração de CORS para permitir comunicação frontend-backend durante o desenvolvimento:
+    ```java
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
+    }
+    ```
+
+**Por quê:**
+Para permitir que o frontend Angular (localhost:4200) se comunique com o backend Spring Boot (localhost:8080) sem erros de CORS.
+
+3. Criação de Problemas (Novo Problema)
+---------------------------------------
+- **Backend:**
+  - Criado `IssueController` com endpoint POST `/issues/new` para receber e salvar novos problemas:
+    ```java
+    @RestController
+    @RequestMapping("/issues")
+    public class IssueController {
+        @Autowired
+        private IssueRepository issueRepository;
+        @PostMapping("/new")
+        public IssueModel createIssue(@RequestBody IssueModel issueModel) {
+            return this.issueRepository.save(issueModel);
+        }
+    }
+    ```
+  - Usado repositório JPA para persistência no banco de dados:
+    ```java
+    public interface IssueRepository extends JpaRepository<IssueModel, Long> {}
+    ```
+
+- **Frontend:**
+  - Criado `IssueService` para enviar novos problemas ao backend:
+    ```typescript
+    @Injectable({ providedIn: 'root' })
+    export class IssueService {
+      private apiUrl = 'http://localhost:8080/issues';
+      constructor(private http: HttpClient) {}
+      createIssue(issue: any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/new`, issue);
+      }
+    }
+    ```
+  - Atualizado o componente do formulário "Novo problema" para usar o serviço e enviar dados apenas se o formulário for válido:
+    ```typescript
+    public onSubmit() {
+      if (this.issueForm.valid) {
+        this.issueService.createIssue(this.issueForm.value).subscribe({
+          next: (res) => { /* sucesso */ },
+          error: (err) => { /* erro */ }
+        });
+      } else {
+        this.issueForm.markAllAsTouched();
+      }
+    }
+    ```
+
+**Por quê:**
+Para permitir que usuários criem e salvem novos problemas pelo frontend, armazenando-os no banco de dados assim como o registro de usuários.
+
+4. Melhorias Gerais
+-------------------
+- Adicionadas mensagens claras de validação e erro em todos os formulários.
+- Garantido que todos os campos obrigatórios sejam validados tanto na UI quanto no backend.
+- Fornecido código e explicações para cada etapa, facilitando manutenção e extensão do app.
+
+5. Segurança na Criação de Problemas
+------------------------------------
+- **Backend:**
+  - Atualizado `SecurityConfig` para exigir autenticação ao criar problemas:
+    ```java
+    .requestMatchers(HttpMethod.POST, "/issues/new").authenticated()
+    ```
+  - Agora, apenas usuários logados podem criar novos problemas. Requisições não autenticadas recebem 401 Unauthorized.
+
+**Por quê:**
+Para garantir que apenas usuários autenticados possam criar problemas, aumentando a segurança e a responsabilidade no sistema.
+
+6. Criação de Problemas: Requisição Autenticada no Frontend
+-----------------------------------------------------------
+- **Frontend:**
+  - Atualizado `IssueService` para enviar credenciais (cookies/sessão) na requisição de criação:
+    ```typescript
+    return this.http.post(`${this.apiUrl}/new`, issue, { withCredentials: true });
+    ```
+  - Isso garante que o backend receba a autenticação do usuário e permita apenas usuários logados criarem problemas.
+
+**Por quê:**
+Para cumprir a segurança do backend e garantir que apenas usuários autenticados possam criar problemas pelo frontend.
+
+7. Fluxo Final de Autenticação e Criação de Problemas (Junho 2025)
+-------------------------------------------------------------------
+- **Backend:**
+  - Autenticação via HTTP Basic Auth com verificação no banco de dados.
+  - Apenas usuários autenticados podem criar problemas (`/issues/new` protegido).
+  - O backend exige todos os campos obrigatórios em `IssueModel`, incluindo:
+    - `title`, `description`, `street`, `city`, `neighborhood`, `refPoint`, `imageUrl`, `status`, `createdAt` e `createdBy` (como objeto com `id`).
+  - O campo `status` deve ser: `'EM_ANDAMENTO'`, `'REPORTADO'` ou `'RESOLVIDO'`.
+
+- **Frontend:**
+  - O usuário faz login uma vez; as credenciais ficam salvas em `AuthService` e são usadas em todas as requisições protegidas.
+  - O formulário de criação de problema não pede mais e-mail ou senha.
+  - No envio, o frontend inclui todos os campos obrigatórios, incluindo:
+    - `imageUrl: 'default.jpg'` (placeholder)
+    - `status: 'REPORTADO'` (padrão para novos problemas)
+    - `createdAt: <data de hoje>` (formato `yyyy-MM-dd`)
+    - `createdBy: { id: <id do usuário logado> }` (atualmente fixo ou do formulário, mas deve ser do login em produção)
+  - Se o usuário não estiver autenticado, a criação é bloqueada e um erro é exibido.
+
+**Por quê:**
+Para garantir criação de problemas robusta, segura e amigável, com todos os requisitos do backend e experiência de login fluida.
+
+8. Listagem de Problemas e Confirmação (Junho 2025)
+---------------------------------------------------
+- **Backend:**
+  - Adicionado endpoint GET `/issues` em `IssueController` para listar todos os problemas:
+    ```java
+    @GetMapping
+    public List<IssueModel> getAllIssues() {
+        return issueRepository.findAll();
+    }
+    ```
+
+- **Frontend:**
+  - Adicionado `getIssues()` em `IssueService` para buscar a lista de problemas do backend:
+    ```typescript
+    getIssues(): Observable<any[]> {
+      const headers = this.authService.getAuthHeaders();
+      if (!headers) throw new Error('Not authenticated');
+      return this.http.get<any[]>(this.apiUrl, { headers });
+    }
+    ```
+  - Implementada a página "Problemas relatados" (UserIssuesComponent) para exibir a lista de problemas com tratamento de erro.
+  - Após criar um novo problema, uma mensagem de confirmação é exibida e o formulário é limpo para melhor experiência do usuário.
+
+**Por quê:**
+Para permitir que usuários vejam todos os problemas relatados e recebam feedback claro após criar um novo problema, melhorando usabilidade e transparência.
+
+---
+Result
+------
+- Secure, database-backed user registration and login.
+- All forms are validated and user-friendly.
+- Issues can be created from the frontend and are saved in the database.
+- The codebase is more maintainable and ready for further features.
+
+For further questions or next steps, just ask!

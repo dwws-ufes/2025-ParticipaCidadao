@@ -34,9 +34,20 @@ public class UserController {
         return this.userRepository.save(userModel);
     }
 
+    // Endpoint for HTTP Basic Auth check and user info return
+    @GetMapping("/auth/check")
+    public UserModel authCheck(org.springframework.security.core.Authentication authentication) {
+        // Find user by email (username)
+        String email = authentication.getName();
+        UserModel user = this.userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException(-1L);
+        }
+        return user;
+    }
+
     @GetMapping("/{id}")
     public UserModel getUser(@PathVariable Long id) {
-
         if(!this.userRepository.existsById(id)) {
             throw new UserNotFoundException(id);
         }
@@ -45,11 +56,15 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserModel updateUser(@PathVariable Long id, @RequestBody UserModel userModel) {
-
         if(!this.userRepository.existsById(id)) {
             throw new UserNotFoundException(id);
         }
         userModel.setId(id);
+        // Always encode the password before saving (if not already encoded)
+        String password = userModel.getPassword();
+        if (password != null && !password.startsWith("$2a$") && !password.startsWith("$2b$") && !password.startsWith("$2y$")) {
+            userModel.setPassword(passwordEncoder.encode(password));
+        }
         return this.userRepository.save(userModel);
     }
 

@@ -1,1 +1,34 @@
-<p>edit-user works!</p>
+
+<div class="container mt-4">
+  <h2>Atualizar Dados do Usuário</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Nome</label>
+      <input id="name" type="text" class="form-control" formControlName="name">
+      <div *ngIf="submitted && userForm.controls['name'].errors" class="text-danger">Nome é obrigatório.</div>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input id="email" type="email" class="form-control" formControlName="email">
+      <div *ngIf="submitted && userForm.controls['email'].errors" class="text-danger">Email válido é obrigatório.</div>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Senha</label>
+      <input id="password" type="password" class="form-control" formControlName="password">
+      <div *ngIf="submitted && userForm.controls['password'].errors" class="text-danger">Senha é obrigatória.</div>
+    </div>
+    <div class="mb-3">
+      <label for="cpf" class="form-label">CPF</label>
+      <input id="cpf" type="text" class="form-control" formControlName="cpf">
+      <div *ngIf="submitted && userForm.controls['cpf'].errors" class="text-danger">CPF é obrigatório.</div>
+    </div>
+    <div class="mb-3">
+      <label for="birthDate" class="form-label">Data de Nascimento</label>
+      <input id="birthDate" type="date" class="form-control" formControlName="birthDate">
+      <div *ngIf="submitted && userForm.controls['birthDate'].errors" class="text-danger">Data de nascimento é obrigatória.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Atualizar</button>
+  </form>
+  <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+</div>

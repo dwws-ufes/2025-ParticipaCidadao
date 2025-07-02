@@ -6,5 +6,5 @@ import br.ufes.participacidadao.models.UserModel;
 
 
 public interface UserRepository extends JpaRepository<UserModel, Long>{
-
+    UserModel findByEmail(String email);
 }

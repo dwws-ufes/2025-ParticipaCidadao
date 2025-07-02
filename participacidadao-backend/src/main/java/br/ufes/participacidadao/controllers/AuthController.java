@@ -39,8 +39,5 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/users/auth/check")
-    public Map<String, String> checkLogin(Authentication authentication) {
-        return Map.of("message", "Autenticado como " + authentication.getName());
-    }
+    // Removed duplicate /users/auth/check endpoint to avoid mapping conflict
 }

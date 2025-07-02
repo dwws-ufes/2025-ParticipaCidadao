@@ -1,7 +1,7 @@
 import { Role } from "./enums/role.enum"
 
 export default class User {
-
+    public id?: number;
     public name?: string;
     public email?: string;
     public password?: string;
@@ -16,6 +16,7 @@ export default class User {
     }
 
     public updateUser(object: any) {
+        this.id = object.id;
         this.name = object.name;
         this.email = object.email;
         this.password = object.password;

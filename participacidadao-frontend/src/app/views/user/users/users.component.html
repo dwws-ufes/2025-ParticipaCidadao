@@ -1,1 +1,30 @@
-<p>users works!</p>
+<div class="container mt-4">
+  <h2>Dados do Usuário Logado</h2>
+  <table class="table table-bordered" *ngIf="user">
+    <tr>
+      <th>ID</th>
+      <td>{{ user.id }}</td>
+    </tr>
+    <tr>
+      <th>Nome</th>
+      <td>{{ user.name }}</td>
+    </tr>
+    <tr>
+      <th>Email</th>
+      <td>{{ user.email }}</td>
+    </tr>
+    <tr>
+      <th>CPF</th>
+      <td>{{ user.cpf }}</td>
+    </tr>
+    <tr>
+      <th>Data de Nascimento</th>
+      <td>{{ user.birthDate | date:'yyyy-MM-dd' }}</td>
+    </tr>
+    <tr>
+      <th>Perfil</th>
+      <td>{{ user.role }}</td>
+    </tr>
+  </table>
+  <div *ngIf="!user" class="alert alert-warning">Nenhum usuário logado.</div>
+</div>

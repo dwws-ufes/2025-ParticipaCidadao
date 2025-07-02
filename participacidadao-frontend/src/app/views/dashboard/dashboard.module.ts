@@ -21,6 +21,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 
 import { WidgetsModule } from '../widgets/widgets.module';
+import { ReportedIssuesComponent } from '../issue/reported-issues/reported-issues.component';
 
 @NgModule({
   imports: [
@@ -42,7 +43,7 @@ import { WidgetsModule } from '../widgets/widgets.module';
     TableModule,
     WidgetsModule
   ],
-  declarations: [DashboardComponent]
+  declarations: [DashboardComponent, ReportedIssuesComponent]
 })
 export class DashboardModule {
 }

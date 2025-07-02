@@ -20,8 +20,8 @@
   </div>
   <div *ngIf="!issues.length && !error" class="mb-2">Nenhum problema relatado.</div>
   <div class="d-grid gap-2 d-flex justify-content-end mt-3">
-    <c-button cButton class="btn btn-primary" routerLink="/issue/new">
+    <a cButton class="btn btn-primary" [routerLink]="['/problema/novo']">
       &nbsp; Relatar Novo Problema
-    </c-button>
+    </a>
   </div>
 </div>

@@ -91,7 +91,8 @@ import {
   cilUserUnfollow,
   cilBaby,
   cilPlaylistAdd,
-  cilClipboard
+  cilClipboard,
+  cilAccountLogout
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -187,7 +188,8 @@ export const iconSubset = {
   cilUserUnfollow,
   cilBaby,
   cilPlaylistAdd,
-  cilClipboard
+  cilClipboard,
+  cilAccountLogout
 };
 
 export enum IconSubset {

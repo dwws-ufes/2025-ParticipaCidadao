@@ -30,10 +30,5 @@ export const navItems: INavData[] = [
         url: '/problema/relatados'
       }
     ]
-  },
-  {
-    name: 'Configurações',
-    url: '/settings',
-    iconComponent: { name: 'cil-settings' }
   }
 ];

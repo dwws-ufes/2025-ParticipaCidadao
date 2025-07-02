@@ -1,5 +1,7 @@
 package br.ufes.participacidadao.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,5 +77,11 @@ public class UserController {
             throw new UserNotFoundException(id);
         }
         this.userRepository.deleteById(id);
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping
+    public List<UserModel> getAllUsers() {
+        return userRepository.findAll();
     }
 }

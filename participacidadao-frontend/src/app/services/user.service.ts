@@ -25,4 +25,10 @@ export class UserService {
         return this.http.put(`${this.apiUrl}/${id}`, user, { headers });
     }
 
+    getUsers(): Observable<any[]> {
+    const headers = this.authService.getAuthHeaders();
+    if (!headers) throw new Error('Not authenticated');
+    return this.http.get<any[]>(this.apiUrl, { headers });
+  }
+
 }

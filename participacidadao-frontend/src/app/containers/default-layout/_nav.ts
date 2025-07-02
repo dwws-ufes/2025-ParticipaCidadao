@@ -7,7 +7,7 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cilUser' },
     children: [
       {
-        name: 'Gerenciar usuários',
+        name: 'Usuários cadastrados',
         url: '/usuario/gerenciar'
       },
       {
@@ -24,10 +24,6 @@ export const navItems: INavData[] = [
       {
         name: 'Novo problema',
         url: '/problema/novo'
-      },
-      {
-        name: 'Problemas relatados',
-        url: '/problema/relatados'
       }
     ]
   }

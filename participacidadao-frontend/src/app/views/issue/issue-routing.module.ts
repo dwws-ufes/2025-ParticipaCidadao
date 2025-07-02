@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NewIssueComponent } from './new-issue/new-issue.component';
-import { UserIssuesComponent } from './user-issues/user-issues.component';
 
 const routes: Routes = [
   {
@@ -13,10 +12,6 @@ const routes: Routes = [
       {
         path: 'novo',
         component: NewIssueComponent
-      },
-      {
-        path: 'relatados',
-        component: UserIssuesComponent
       }
     ]
   }

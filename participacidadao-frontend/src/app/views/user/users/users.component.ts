@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
 import User from '../../../models/User';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-users',
@@ -8,11 +8,19 @@ import User from '../../../models/User';
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-  user: User | null = null;
+  users: User[] | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.user = this.authService.getCurrentUser();
+    this.userService.getUsers().subscribe({
+      next: (response: any) => {
+        this.users = response;
+        console.log(this.users);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 }

@@ -1,48 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule } from '@angular/forms';
 
-import {
-  AvatarModule,
-  ButtonGroupModule,
-  ButtonModule,
-  CardModule,
-  FormModule,
-  GridModule,
-  NavModule,
-  ProgressModule,
-  TableModule,
-  TabsModule
-} from '@coreui/angular';
-import { IconModule } from '@coreui/icons-angular';
-import { ChartjsModule } from '@coreui/angular-chartjs';
-
-import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardComponent } from './dashboard.component';
-
-import { WidgetsModule } from '../widgets/widgets.module';
+import { CardModule, FormModule, GridModule, ButtonModule } from '@coreui/angular';
+import { IssueRoutingModule } from '../issue/issue-routing.module';
+import { ReportedIssuesComponent } from '../issue/reported-issues/reported-issues.component';
 
 @NgModule({
+  declarations: [ ReportedIssuesComponent ],
   imports: [
-    DashboardRoutingModule,
-    CardModule,
-    NavModule,
-    IconModule,
-    TabsModule,
     CommonModule,
-    GridModule,
-    ProgressModule,
+    IssueRoutingModule,
     ReactiveFormsModule,
-    ButtonModule,
+    CardModule,
     FormModule,
-    ButtonModule,
-    ButtonGroupModule,
-    ChartjsModule,
-    AvatarModule,
-    TableModule,
-    WidgetsModule
-  ],
-  declarations: [DashboardComponent]
+    GridModule,
+    ButtonModule
+  ]
 })
 export class DashboardModule {
 }

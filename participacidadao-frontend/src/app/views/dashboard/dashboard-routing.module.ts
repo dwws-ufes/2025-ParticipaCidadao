@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { DashboardComponent } from './dashboard.component';
+import { ReportedIssuesComponent } from '../issue/reported-issues/reported-issues.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent,
+    component: ReportedIssuesComponent,
     data: {
-      title: $localize`Dashboard`
+      title: 'Problemas'
     }
   }
 ];

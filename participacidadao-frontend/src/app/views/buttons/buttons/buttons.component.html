@@ -20,13 +20,8 @@
               {{state.charAt(0).toUpperCase() + state.slice(1)}}
             </c-col>
             <c-col>
-              <button *ngFor="let color of colors; index as i"
-                      [active]="state === 'active'"
-                      [color]="color"
-                      [disabled]="state === 'disabled'"
-                      cButton
-                      class="me-1"
-              >
+              <button *ngFor="let color of colors; index as i" [active]="state === 'active'" [color]="color"
+                [disabled]="state === 'disabled'" cButton class="me-1">
                 {{color.charAt(0).toUpperCase() + color.slice(1)}}
               </button>
             </c-col>
@@ -50,13 +45,8 @@
               {{state.charAt(0).toUpperCase() + state.slice(1)}}
             </c-col>
             <c-col>
-              <button *ngFor="let color of colors; index as i"
-                      [active]="state === 'active'"
-                      [color]="color"
-                      [disabled]="state === 'disabled'"
-                      cButton
-                      class="me-1"
-              >
+              <button *ngFor="let color of colors; index as i" [active]="state === 'active'" [color]="color"
+                [disabled]="state === 'disabled'" cButton class="me-1">
                 <svg cIcon class="me-2" name="cil-bell"></svg>
                 {{color.charAt(0).toUpperCase() + color.slice(1)}}
               </button>
@@ -114,15 +104,8 @@
             </c-col>
             <c-col>
               <ng-container *ngFor="let color of colors; index as i; last as isLast">
-                <button
-                  *ngIf="!isLast"
-                  [active]="state === 'active'"
-                  [color]="color"
-                  [disabled]="state === 'disabled'"
-                  cButton
-                  class="me-1"
-                  variant="outline"
-                >
+                <button *ngIf="!isLast" [active]="state === 'active'" [color]="color" [disabled]="state === 'disabled'"
+                  cButton class="me-1" variant="outline">
                   {{color.charAt(0).toUpperCase() + color.slice(1)}}
                 </button>
               </ng-container>
@@ -149,15 +132,8 @@
             </c-col>
             <c-col>
               <ng-container *ngFor="let color of colors; index as i; last as isLast">
-                <button
-                  *ngIf="!isLast"
-                  [active]="state === 'active'"
-                  [color]="color"
-                  [disabled]="state === 'disabled'"
-                  cButton
-                  class="me-1"
-                  variant="ghost"
-                >
+                <button *ngIf="!isLast" [active]="state === 'active'" [color]="color" [disabled]="state === 'disabled'"
+                  cButton class="me-1" variant="ghost">
                   {{color.charAt(0).toUpperCase() + color.slice(1)}}
                 </button>
               </ng-container>
@@ -205,13 +181,7 @@
       <c-card-body>
         <app-docs-example href="components/button#pill-buttons">
           <ng-container *ngFor="let color of colors; index as i; last as isLast">
-            <button
-              *ngIf="!isLast"
-              [color]="color"
-              cButton
-              class="me-1"
-              shape="rounded-pill"
-            >
+            <button *ngIf="!isLast" [color]="color" cButton class="me-1" shape="rounded-pill">
               {{color.charAt(0).toUpperCase() + color.slice(1)}}
             </button>
           </ng-container>
@@ -227,13 +197,7 @@
       <c-card-body>
         <app-docs-example href="components/button#square">
           <ng-container *ngFor="let color of colors; index as i; last as isLast">
-            <button
-              *ngIf="!isLast"
-              [color]="color"
-              cButton
-              class="me-1"
-              shape="rounded-0"
-            >
+            <button *ngIf="!isLast" [color]="color" cButton class="me-1" shape="rounded-0">
               {{color.charAt(0).toUpperCase() + color.slice(1)}}
             </button>
           </ng-container>

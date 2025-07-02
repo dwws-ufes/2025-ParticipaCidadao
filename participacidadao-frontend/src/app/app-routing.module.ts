@@ -6,6 +6,7 @@ import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
+import { NewIssueComponent } from './views/issue/new-issue/new-issue.component';
 
 const routes: Routes = [
   {
@@ -27,7 +28,7 @@ const routes: Routes = [
       },
       {
         path: 'usuario',
-        loadChildren: () => 
+        loadChildren: () =>
           import('./views/user/user.module').then((m) => m.UserModule)
       },
       {
@@ -80,6 +81,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/pages/pages.module').then((m) => m.PagesModule)
       },
+      {
+        path: 'problema',
+        loadChildren: () => import('./views/issue/issue.module').then(m => m.IssueModule)
+      }
+
     ]
   },
   {
@@ -110,7 +116,14 @@ const routes: Routes = [
       title: 'Register Page'
     }
   },
-  {path: '**', redirectTo: 'dashboard'}
+  {
+    path: 'problema/novo',
+    component: NewIssueComponent,
+    data: {
+      title: 'Novo Problema'
+    }
+  },
+  { path: '**', redirectTo: 'dashboard' }
 ];
 
 @NgModule({

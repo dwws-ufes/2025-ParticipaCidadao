@@ -15,6 +15,9 @@ import { AppComponent } from './app.component';
 // Import containers
 import { DefaultFooterComponent, DefaultHeaderComponent, DefaultLayoutComponent } from './containers';
 
+import { DadosCidadeComponent } from '../components/dados-cidade/dados-cidade.component';
+import { LinkedDataService } from './services/linked-data.service';
+
 import {
   AvatarModule,
   BadgeModule,
@@ -46,7 +49,7 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS],
+  declarations: [AppComponent, ...APP_CONTAINERS, DadosCidadeComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -82,7 +85,8 @@ const APP_CONTAINERS = [
       useClass: HashLocationStrategy
     },
     IconSetService,
-    Title
+    Title,
+    LinkedDataService
   ],
   bootstrap: [AppComponent]
 })

@@ -47,6 +47,14 @@
                     </c-col>
                 </c-row>
 
+                <!-- Seu formulário existente -->
+                <input [(ngModel)]="cidadeSelecionada" (ngModelChange)="onCidadeChange($event)"
+                    placeholder="Nome da cidade">
+
+                <!-- Adicionar componente de dados enriquecidos -->
+                <app-dados-cidade *ngIf="mostrarDadosCidade" [nomeCidade]="cidadeSelecionada">
+                </app-dados-cidade>
+
                 <div class="d-grid gap-2 d-flex justify-content-end mt-md-4">
                     <button cButton type="submit" class="btn btn-success btn-block pad-btn">
                         &nbsp; Criar Novo Problema

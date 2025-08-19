@@ -40,4 +40,4 @@ services:
       - ../participacidadao-backend:/app/participacidadao-backend
       - ../participacidadao-frontend:/app/participacidadao-frontend
     stdin_open: true
-    command: bash -c "cd /app/participacidadao-backend && ./mvnw spring-boot:run"
+    # command: bash -c "cd /app/participacidadao-backend && ./mvnw spring-boot:run"

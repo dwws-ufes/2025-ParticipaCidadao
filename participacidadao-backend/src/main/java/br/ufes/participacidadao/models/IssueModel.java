@@ -54,51 +54,107 @@ public class IssueModel {
     @JoinColumn(name = "created_by")
     private UserModel createdBy;
 
+    @OneToOne
+    @JoinColumn(name = "dados_interligados_id")
+    private DadosInterligados dadosInterligados;
+
     // ===================================================================================================
     // Getters and Setters
     // ===================================================================================================
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
-    public void setTitle(String title) { this.title = title; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public String getImageUrl() { return imageUrl; }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-    public Status getStatus() { return status; }
+    public Status getStatus() {
+        return status;
+    }
 
-    public void setStatus(Status status) { this.status = status; }
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-    public LocalDate getCreatedAt() { return createdAt; }
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
 
-    public void setCreatedAt(LocalDate createdAt) { this.createdAt = createdAt; }
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
 
-    public String getStreet() { return street; }
+    public String getStreet() {
+        return street;
+    }
 
-    public void setStreet(String street) { this.street = street; }
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-    public String getCity() { return city; }
+    public String getCity() {
+        return city;
+    }
 
-    public void setCity(String city) { this.city = city; }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-    public String getRefPoint() { return refPoint; }
+    public String getRefPoint() {
+        return refPoint;
+    }
 
-    public void setRefPoint(String refPoint) { this.refPoint = refPoint; }
+    public void setRefPoint(String refPoint) {
+        this.refPoint = refPoint;
+    }
 
-    public UserModel getCreatedBy() { return createdBy; }
+    public UserModel getCreatedBy() {
+        return createdBy;
+    }
 
-    public void setCreatedBy(UserModel createdBy) { this.createdBy = createdBy; }
+    public void setCreatedBy(UserModel createdBy) {
+        this.createdBy = createdBy;
+    }
 
-    public String getNeighborhood() { return neighborhood; }
+    public String getNeighborhood() {
+        return neighborhood;
+    }
 
-    public void setNeighborhood(String neighborhood) { this.neighborhood = neighborhood; }
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public DadosInterligados getDadosInterligados() {
+        return dadosInterligados;
+    }
+
+    public void setDadosInterligados(DadosInterligados dadosInterligados) {
+        this.dadosInterligados = dadosInterligados;
+    }
 }

@@ -42,7 +42,7 @@
                                 <!-- Lista de sugestões -->
                                 <c-col *ngIf="cidadesFiltradas$ | async as cidades">
                                     <div *ngFor="let cidade of cidades" (click)="selecionarCidade(cidade)">
-                                        {{ cidade.name }} - {{ cidade.microrregiao.mesorregiao.UF.sigla }}
+                                        {{ cidade.nome }} - {{ cidade.microrregiao.mesorregiao.UF.sigla }}
                                         <small class="text-muted">
                                             {{ cidade.microrregiao.mesorregiao.UF.regiao.nome}}
                                         </small>
@@ -90,8 +90,8 @@
                                 </c-col>
 
                                 <c-col>
-                                    <label for="city">Bairro</label>
-                                    <input id="city" type="text" formControlName="neighborhood" cFormControl>
+                                    <label for="neighborhood">Bairro</label>
+                                    <input id="neighborhood" type="text" formControlName="neighborhood" cFormControl>
                                 </c-col>
 
                                 <c-col>

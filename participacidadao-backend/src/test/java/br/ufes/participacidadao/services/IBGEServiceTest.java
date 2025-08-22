@@ -30,7 +30,7 @@ class IBGEServiceTest {
         Optional<IBGEMunicipioDTO> municipio = ibgeService.buscarMunicipioPorNome("Vitória");
 
         assertTrue(municipio.isPresent());
-        assertEquals("Vitória", municipio.get().getName());
+        assertEquals("Vitória", municipio.get().getNome());
     }
 
     @Test

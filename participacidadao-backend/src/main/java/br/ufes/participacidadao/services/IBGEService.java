@@ -28,7 +28,7 @@ public class IBGEService {
     // Buscar município por nome
     public Optional<IBGEMunicipioDTO> buscarMunicipioPorNome(String nome) {
         try {
-            String url = IBGE_LOCALIDADES_URL + "?nome" + URLEncoder.encode(nome, StandardCharsets.UTF_8);
+            String url = IBGE_LOCALIDADES_URL + "?nome=" + URLEncoder.encode(nome, StandardCharsets.UTF_8);
             ResponseEntity<IBGEMunicipioDTO[]> response = restTemplate.getForEntity(url, IBGEMunicipioDTO[].class);
 
             if (response.getBody() != null && response.getBody().length > 0) {
@@ -80,7 +80,7 @@ public class IBGEService {
                     IBGEPopulacaoDTO.Resultado resultado = dto.getResultados().get(0);
                     if (resultado.getSeries() != null && !resultado.getSeries().isEmpty()) {
                         IBGEPopulacaoDTO.Resultado.Serie serie = resultado.getSeries().get(0);
-                        String populacaoStr = serie.getSerie().get("2024");
+                        String populacaoStr = serie.getSerie().get("2021");
                         if (populacaoStr != null) {
                             return Optional.of(Long.parseLong(populacaoStr));
                         }
@@ -161,7 +161,7 @@ public class IBGEService {
         Optional<Double> areaTerritorialOpt = buscarAreaTerritorial(codigoIBGE);
 
         IBGECidadeDadosDTO dto = new IBGECidadeDadosDTO();
-        dto.setNome(municipio.getName());
+        dto.setNome(municipio.getNome());
         dto.setUf(municipio.getMicrorregiao().getMesorregiao().getUF().getSigla());
         dto.setPopulacao(populacaoOpt.orElse(null));
         dto.setPibPerCapita(pibPerCapitaOpt.orElse(null));

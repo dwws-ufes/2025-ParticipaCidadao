@@ -17,7 +17,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.User;
@@ -26,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 import java.sql.*;
-
 
 @Configuration
 @EnableWebSecurity
@@ -53,27 +51,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight
-                .requestMatchers(HttpMethod.POST, "/users/new").permitAll()
-                .requestMatchers(HttpMethod.GET, "/users/auth/check").authenticated()
-                .requestMatchers(HttpMethod.POST, "/issues/new").authenticated()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form.disable()) // Disable form login
-            .httpBasic(Customizer.withDefaults()); // Enable HTTP Basic Auth
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight
+                        .requestMatchers(HttpMethod.POST, "/users/new").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/ibge/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/auth/check").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/issues/new").authenticated()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form.disable()) // Disable form login
+                .httpBasic(Customizer.withDefaults()); // Enable HTTP Basic Auth
 
         return http.build();
     }
+
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
             try (Connection conn = dataSource.getConnection()) {
                 PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT email, password, role FROM users WHERE email = ?"
-                );
+                        "SELECT email, password, role FROM users WHERE email = ?");
                 stmt.setString(1, email);
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
@@ -91,16 +89,19 @@ public class SecurityConfig {
             }
         };
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder,
+            UserDetailsService userDetailsService) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder)
-            .and()
-            .build();
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder)
+                .and()
+                .build();
     }
 }

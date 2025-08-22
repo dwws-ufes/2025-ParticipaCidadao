@@ -27,7 +27,7 @@ export class LinkedDataService {
 
         return this.http.get<IBGEMunicipio[]>(url).pipe(
             map(municipios => municipios.filter(m =>
-                m.name.toLowerCase().includes(termo.toLowerCase())
+                m.nome.toLowerCase().includes(termo.toLowerCase())
             )),
             catchError(error => {
                 console.error('Erro ao buscar municípios:', error);

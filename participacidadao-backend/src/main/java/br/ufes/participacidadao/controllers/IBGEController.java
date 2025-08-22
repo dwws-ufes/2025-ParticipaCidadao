@@ -62,8 +62,7 @@ public class IBGEController {
     @GetMapping("/municipio/{codigoIBGE}/populacao")
     public ResponseEntity<Long> buscarPopulacao(@PathVariable Long codigoIBGE) {
         Optional<Long> populacao = ibgeService.buscarPopulacao(codigoIBGE);
-        return ibgeService.buscarPopulacao(codigoIBGE)
-                .map(ResponseEntity::ok)
+        return populacao.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 }

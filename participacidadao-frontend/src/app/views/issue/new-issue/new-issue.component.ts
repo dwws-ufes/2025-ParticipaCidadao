@@ -77,11 +77,11 @@ export class NewIssueComponent {
   public selecionarCidade(municipio: IBGEMunicipio) {
     this.cidadeSelecionada = municipio;
     this.issueForm.patchValue({
-      city: municipio.name
+      city: municipio.nome
     });
 
     // Buscar dados enriquecidos da cidade
-    this.carregarDadosEnriquecidos(municipio.name);
+    this.carregarDadosEnriquecidos(municipio.nome);
   }
 
   // public onCidadeInput(event: any) {
@@ -127,7 +127,7 @@ export class NewIssueComponent {
   }
 
   public displayFn(municipio?: IBGEMunicipio): string {
-    return municipio ? `${municipio.name} - ${municipio.microrregiao.mesorregiao.UF.sigla}` : '';
+    return municipio ? `${municipio.nome} - ${municipio.microrregiao.mesorregiao.UF.sigla}` : '';
   }
 
   public onSubmit() {

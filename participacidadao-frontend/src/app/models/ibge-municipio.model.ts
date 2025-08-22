@@ -1,6 +1,6 @@
 export interface IBGEMunicipio {
     id: number;
-    name: string;
+    nome: string;
     microrregiao: {
         mesorregiao: {
             UF: {

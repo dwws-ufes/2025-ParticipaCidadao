@@ -1,13 +1,14 @@
-package br.ufes.participacidadao.repositores;
+package br.ufes.participacidadao.repositories;
 
-import br.ufes.participacidadao.models.DadosInterligados;
+import br.ufes.participacidadao.models.DadosEnriquecidos;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
+public interface LinkedDataRepository extends JpaRepository<DadosEnriquecidos, Long> {
+    Optional<DadosEnriquecidos> findByNomeCidade(String nomeCidade);
 
-public interface LinkedDataRepository extends JpaRepository<dadosInterligados, Long> {
-    Optional<dadosInterligados> findByCityName(String cityName);
+    Optional<DadosEnriquecidos> findByCodigoIBGE(Long codigoIBGE);
+
+    boolean existsByNomeCidade(String nomeCidade);
 }

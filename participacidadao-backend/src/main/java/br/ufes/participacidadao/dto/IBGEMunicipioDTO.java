@@ -1,29 +1,12 @@
-package main.java.br.ufes.participacidadao.dto;
+package br.ufes.participacidadao.dto;
 
 public class IBGEMunicipioDTO {
+    // Classe principal
     private Long id;
     private String name;
     private Microrregiao microrregiao;
 
-    public static class Microrregiao {
-        private Mesorregiao mesorregiao;
-
-        public static class Mesorregiao {
-            private UF UF;
-
-            public static class UF {
-                private String sigla;
-                private String nome;
-                private String regiao;
-
-                public static class Regiao {
-                    private String nome;
-                    private String sigla;
-                }
-            }
-        }
-    }
-
+    // Getters e Setters da classe principal
     public Long getId() {
         return id;
     }
@@ -48,55 +31,82 @@ public class IBGEMunicipioDTO {
         this.microrregiao = microrregiao;
     }
 
-    public Microrregiao.Mesorregiao getMesorregiao() {
-        return microrregiao != null ? microrregiao.mesorregiao : null;
-    }
+    public static class Microrregiao {
+        private Mesorregiao mesorregiao;
 
-    public void setMesorregiao(Microrregiao.Mesorregiao mesorregiao) {
-        if (microrregiao != null) {
-            microrregiao.mesorregiao = mesorregiao;
+        // Getters e Setters da Microrregiao
+        public Mesorregiao getMesorregiao() {
+            return mesorregiao;
         }
-    }
 
-    public Microrregiao.Mesorregiao.UF getUF() {
-        return microrregiao != null ? microrregiao.mesorregiao.UF : null;
-    }
-
-    public void setUF(Microrregiao.Mesorregiao.UF UF) {
-        if (microrregiao != null && microrregiao.mesorregiao != null) {
-            microrregiao.mesorregiao.UF = UF;
+        public void setMesorregiao(Mesorregiao mesorregiao) {
+            this.mesorregiao = mesorregiao;
         }
-    }
 
-    public Microrregiao.Mesorregiao.UF.Regiao getRegiao() {
-        return microrregiao != null && microrregiao.mesorregiao != null ? microrregiao.mesorregiao.UF.regiao : null;
-    }
+        public static class Mesorregiao {
+            private UF UF;
 
-    public void setRegiao(Microrregiao.Mesorregiao.UF.Regiao regiao) {
-        if (microrregiao != null && microrregiao.mesorregiao != null && microrregiao.mesorregiao.UF != null) {
-            microrregiao.mesorregiao.UF.regiao = regiao;
+            // Getters e Setters da Mesorregiao
+            public UF getUF() {
+                return UF;
+            }
+
+            public void setUF(UF UF) {
+                this.UF = UF;
+            }
+
+            public static class UF {
+                private String sigla;
+                private String nome;
+                private Regiao regiao;
+
+                // Getters e Setters da UF
+                public String getSigla() {
+                    return sigla;
+                }
+
+                public void setSigla(String sigla) {
+                    this.sigla = sigla;
+                }
+
+                public String getNome() {
+                    return nome;
+                }
+
+                public void setNome(String nome) {
+                    this.nome = nome;
+                }
+
+                public Regiao getRegiao() {
+                    return regiao;
+                }
+
+                public void setRegiao(Regiao regiao) {
+                    this.regiao = regiao;
+                }
+
+                public static class Regiao {
+                    private String nome;
+                    private String sigla;
+
+                    // Getters e Setters da Regiao
+                    public String getNome() {
+                        return nome;
+                    }
+
+                    public void setNome(String nome) {
+                        this.nome = nome;
+                    }
+
+                    public String getSigla() {
+                        return sigla;
+                    }
+
+                    public void setSigla(String sigla) {
+                        this.sigla = sigla;
+                    }
+                }
+            }
         }
-    }
-
-    public String getUFName() {
-        return microrregiao != null && microrregiao.mesorregiao != null && microrregiao.mesorregiao.UF != null
-                ? microrregiao.mesorregiao.UF.nome
-                : null;
-    }
-
-    public String getUFAbbreviation() {
-        return microrregiao != null && microrregiao.mesorregiao != null && microrregiao.mesorregiao.UF != null
-                ? microrregiao.mesorregiao.UF.sigla
-                : null;
-    }
-
-    public String getRegiaoName() {
-        return microrregiao != null && microrregiao.mesorregiao != null && microrregiao.mesorregiao.UF != null
-                && microrregiao.mesorregiao.UF.regiao != null ? microrregiao.mesorregiao.UF.regiao.nome : null;
-    }
-
-    public String getRegiaoAbbreviation() {
-        return microrregiao != null && microrregiao.mesorregiao != null && microrregiao.mesorregiao.UF != null
-                && microrregiao.mesorregiao.UF.regiao != null ? microrregiao.mesorregiao.UF.regiao.sigla : null;
     }
 }

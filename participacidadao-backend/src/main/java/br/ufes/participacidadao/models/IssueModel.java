@@ -3,6 +3,7 @@ package br.ufes.participacidadao.models;
 import java.time.LocalDate;
 
 import br.ufes.participacidadao.utils.enums.Status;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,8 +56,8 @@ public class IssueModel {
     private UserModel createdBy;
 
     @OneToOne
-    @JoinColumn(name = "dados_interligados_id")
-    private DadosInterligados dadosInterligados;
+    @JoinColumn(name = "dados_Enriquecidos_id")
+    private DadosEnriquecidos dadosEnriquecidos;
 
     // ===================================================================================================
     // Getters and Setters
@@ -150,11 +151,11 @@ public class IssueModel {
         this.neighborhood = neighborhood;
     }
 
-    public DadosInterligados getDadosInterligados() {
-        return dadosInterligados;
+    public DadosEnriquecidos getDadosEnriquecidos() {
+        return dadosEnriquecidos;
     }
 
-    public void setDadosInterligados(DadosInterligados dadosInterligados) {
-        this.dadosInterligados = dadosInterligados;
+    public void setDadosEnriquecidos(DadosEnriquecidos dadosEnriquecidos) {
+        this.dadosEnriquecidos = dadosEnriquecidos;
     }
 }

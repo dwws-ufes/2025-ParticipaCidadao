@@ -1,6 +1,6 @@
 package br.ufes.participacidadao.controllers;
 
-import br.ufes.participacidadao.models.DadosInterligados;
+import br.ufes.participacidadao.models.DadosEnriquecidos;
 import br.ufes.participacidadao.services.LinkedDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,11 +14,18 @@ public class LinkedDataController {
     @Autowired
     private LinkedDataService linkedDataService;
 
-    @GetMapping("/cidades/{cityName}")
-    public ResponseEntity<DadosInterligados> getDadosInterligados(@PathVariable String cityName) {
-        DadosInterligados dados = linkedDataService.interligarDadosCidade(cityName);
+    @GetMapping("/cidades/{nomeCidade}")
+    public ResponseEntity<DadosEnriquecidos> getDadosEnriquecidos(@PathVariable String nomeCidade) {
+        DadosEnriquecidos dados = linkedDataService.enriquecerDadosCidade(nomeCidade);
         return ResponseEntity.ok(dados);
     }
+
+    // @PostMapping("/sparql")
+    // public ResponseEntity<String> executeSparqlQuery(@RequestBody String
+    // sparqlQuery) {
+    // String resultado = linkedDataService.executarConsultaSparql(sparqlQuery);
+    // return ResponseEntity.ok(resultado);
+    // }
 
     @PostMapping("/sparql")
     public ResponseEntity<String> executeSparqlQuery(@RequestBody String sparqlQuery) {

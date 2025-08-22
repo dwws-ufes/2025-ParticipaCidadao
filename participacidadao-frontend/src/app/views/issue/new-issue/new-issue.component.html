@@ -5,9 +5,12 @@
     </c-card-header>
 
     <c-card-body>
+        <!-- Mensagens de sucesso/erro -->
         <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
         <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
         <form cForm (ngSubmit)="onSubmit()" [formGroup]="issueForm">
+            <!-- Campos existentes -->
             <c-container>
                 <c-row>
                     <c-col [md]="5">
@@ -20,23 +23,82 @@
                         </textarea>
                     </c-col>
                 </c-row>
+
                 <c-row class="mt-md-3 d-flex align-items-center">
                     <c-col>
                         <c-card class="ps-2 pt-2">
                             <strong class="mb-0 p-0">&nbsp; Endereço do Problema</strong>
                             <c-card-body class="d-flex flex-row gap-2 pt-1">
+
+                                <!-- Campo Cidade com Autocomplete e Dados Interligados -->
                                 <c-col>
                                     <label for="city">Cidade</label>
-                                    <input id="city" type="text" formControlName="city" cFormControl>
+                                    <input id="city" type="text" formControlName="city" cFormControl
+                                        placeholder="Digite o nome da cidade"
+                                        (input)="onCidadeChange($any($event.target).value)"
+                                        [class.is-invalid]="issueForm.get('city')?.invalid && issueForm.get('city')?.touched"
+                                        autocomplete="off">
                                 </c-col>
+                                <!-- Lista de sugestões -->
+                                <c-col *ngIf="cidadesFiltradas$ | async as cidades">
+                                    <div *ngFor="let cidade of cidades" (click)="selecionarCidade(cidade)">
+                                        {{ cidade.name }} - {{ cidade.microrregiao.mesorregiao.UF.sigla }}
+                                        <small class="text-muted">
+                                            {{ cidade.microrregiao.mesorregiao.UF.regiao.nome}}
+                                        </small>
+                                    </div>
+                                </c-col>
+                                <!-- Dados Enriquecidos da Cidade -->
+                                <c-col *ngIf="carregandoDados">
+                                    <p><i class="fa fa-spinner fa-spin"></i> Carregando dados da cidade...</p>
+                                </c-col>
+
+                                <c-col *ngIf="mostrarDadosCidade && dadosEnriquecidos">
+                                    <h4>Dados da Cidade (Linked Data)</h4>
+                                    <div>
+                                        <div *ngIf="dadosEnriquecidos.populacao">
+                                            <strong>População:</strong>
+                                            {{ dadosEnriquecidos.populacao | number }}
+                                        </div>
+                                        <div *ngIf="dadosEnriquecidos.area">
+                                            <strong>Área:</strong>
+                                            {{ dadosEnriquecidos.area | number:'1.2-2' }} km²
+                                        </div>
+                                        <div *ngIf="dadosEnriquecidos.pibPerCapita">
+                                            <strong>PIB per capita:</strong>
+                                            {{ dadosEnriquecidos.pibPerCapita | currency:'BRL' }}
+                                        </div>
+                                        <div *ngIf="dadosEnriquecidos.regiao">
+                                            <strong>Região:</strong>
+                                            {{ dadosEnriquecidos.regiao }}
+                                        </div>
+                                    </div>
+                                </c-col>
+                                <!-- Links externos (Linked Data) -->
+                                <c-col>
+                                    <h5>🔗 Links Externos</h5>
+                                    <ng-container *ngIf="dadosEnriquecidos?.dbpediaUri as dbUri">
+                                        <a [attr.href]="dbUri" target="_blank" rel="noopener">DBpedia</a>
+                                    </ng-container>
+                                    <ng-container *ngIf="dadosEnriquecidos?.wikidataUri as wdUri">
+                                        <a [attr.href]="wdUri" target="_blank" rel="noopener">Wikidata</a>
+                                    </ng-container>
+                                    <!-- <a *ngIf="dadosEnriquecidos.dbpediaUri" [href]="dadosEnriquecidos.dbpediaUri"
+                                        target="_blank" class="external-link">DBpedia</a> -->
+                                    <!-- <a *ngIf="dadosEnriquecidos.wikidataUri" [href]="dadosEnriquecidos.wikidataUri"
+                                        target="_blank" class="external-link">Wikidata</a> -->
+                                </c-col>
+
                                 <c-col>
                                     <label for="city">Bairro</label>
                                     <input id="city" type="text" formControlName="neighborhood" cFormControl>
                                 </c-col>
+
                                 <c-col>
                                     <label for="street">Rua</label>
                                     <input id="street" type="text" formControlName="street" cFormControl>
                                 </c-col>
+
                                 <c-col>
                                     <label for="refPoint">Ponto de Referência</label>
                                     <textarea id="refPoint" formControlName="refPoint" cFormControl>
@@ -48,12 +110,12 @@
                 </c-row>
 
                 <!-- Seu formulário existente -->
-                <input [(ngModel)]="cidadeSelecionada" (ngModelChange)="onCidadeChange($event)"
-                    placeholder="Nome da cidade">
+                <!-- <input [(ngModel)]="cidadeSelecionada" (ngModelChange)="onCidadeChange($event)"
+                    placeholder="Nome da cidade"> -->
 
                 <!-- Adicionar componente de dados enriquecidos -->
-                <app-dados-cidade *ngIf="mostrarDadosCidade" [nomeCidade]="cidadeSelecionada">
-                </app-dados-cidade>
+                <!-- <app-dados-cidade *ngIf="mostrarDadosCidade" [nomeCidade]="cidadeSelecionada">
+                </app-dados-cidade> -->
 
                 <div class="d-grid gap-2 d-flex justify-content-end mt-md-4">
                     <button cButton type="submit" class="btn btn-success btn-block pad-btn">

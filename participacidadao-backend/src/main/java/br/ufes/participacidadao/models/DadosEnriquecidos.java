@@ -1,20 +1,30 @@
 package br.ufes.participacidadao.models;
 
-@Entity
-@Table(name = "dados_interligados")
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-public class DadosInterligados {
+@Entity
+@Table(name = "dados_Enriquecidos")
+
+public class DadosEnriquecidos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String cityName;
+    private String nomeCidade;
     private Long population;
     private Double area;
     private String dbpediaUri;
+    private String uf;
+    private String regiao;
+    private Long codigoIBGE;
+
     private String wikidataUri;
     private Double pibPerCapita;
+
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
 
     // ===================================================================================================
     // Getters and Setters
@@ -28,12 +38,12 @@ public class DadosInterligados {
         this.id = id;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getNomeCidade() {
+        return nomeCidade;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setNomeCidade(String nomeCidade) {
+        this.nomeCidade = nomeCidade;
     }
 
     public Long getPopulation() {
@@ -76,4 +86,35 @@ public class DadosInterligados {
         this.pibPerCapita = pibPerCapita;
     }
 
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public String getRegiao() {
+        return regiao;
+    }
+
+    public void setRegiao(String regiao) {
+        this.regiao = regiao;
+    }
+
+    public Long getCodigoIBGE() {
+        return codigoIBGE;
+    }
+
+    public void setCodigoIBGE(Long codigoIBGE) {
+        this.codigoIBGE = codigoIBGE;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
 }

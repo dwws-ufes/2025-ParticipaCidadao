@@ -1,5 +1,0 @@
-@prefix rc: <http://example.org/participacidadao#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix dbo: <http://dbpedia.org/ontology/> .
-
-# Sua ontologia aqui

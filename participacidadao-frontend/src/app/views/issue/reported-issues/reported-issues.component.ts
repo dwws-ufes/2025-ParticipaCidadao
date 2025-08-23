@@ -18,4 +18,8 @@ export class ReportedIssuesComponent implements OnInit {
       error: (err) => this.error = 'Erro ao carregar problemas.'
     });
   }
+
+  visualizarRdf(): void {
+    window.open('http://localhost:8080/issues/rdf', '_blank');
+  }
 }

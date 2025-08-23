@@ -20,6 +20,9 @@
   </div>
   <div *ngIf="!issues.length && !error" class="mb-2">Nenhum problema relatado.</div>
   <div class="d-grid gap-2 d-flex justify-content-end mt-3">
+    <button cButton class="btn btn-success me-2" (click)="visualizarRdf()">
+      Visualizar em RDF
+    </button>
     <a cButton class="btn btn-primary" [routerLink]="['/problema/novo']">
       &nbsp; Relatar Novo Problema
     </a>

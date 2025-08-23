@@ -5,6 +5,37 @@ public class IBGEMunicipioDTO {
     private Long id;
     private String nome;
     private Microrregiao microrregiao;
+    private RegiaoImediata regiaoImediata;
+    public RegiaoImediata getRegiaoImediata() {
+        return regiaoImediata;
+    }
+
+    public void setRegiaoImediata(RegiaoImediata regiaoImediata) {
+        this.regiaoImediata = regiaoImediata;
+    }
+    public static class RegiaoImediata {
+        private RegiaoIntermediaria regiaoIntermediaria;
+
+        public RegiaoIntermediaria getRegiaoIntermediaria() {
+            return regiaoIntermediaria;
+        }
+
+        public void setRegiaoIntermediaria(RegiaoIntermediaria regiaoIntermediaria) {
+            this.regiaoIntermediaria = regiaoIntermediaria;
+        }
+    }
+
+    public static class RegiaoIntermediaria {
+        private Microrregiao.Mesorregiao.UF uf;
+
+        public Microrregiao.Mesorregiao.UF getUF() {
+            return uf;
+        }
+
+        public void setUF(Microrregiao.Mesorregiao.UF uf) {
+            this.uf = uf;
+        }
+    }
 
     // Getters e Setters da classe principal
     public Long getId() {

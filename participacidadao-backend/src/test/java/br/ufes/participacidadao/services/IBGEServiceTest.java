@@ -26,8 +26,9 @@ class IBGEServiceTest {
     RestTemplate restTemplate;
 
     @Test
+
     void testBuscarMunicipioPorNome() {
-        Optional<IBGEMunicipioDTO> municipio = ibgeService.buscarMunicipioPorNome("Vitória");
+        Optional<IBGEMunicipioDTO> municipio = ibgeService.buscarMunicipioPorNome("Vitória", null);
 
         assertTrue(municipio.isPresent());
         assertEquals("Vitória", municipio.get().getNome());
@@ -41,7 +42,7 @@ class IBGEServiceTest {
         IBGECidadeDadosDTO dados = opt.get();
 
         assertEquals("Vitória", dados.getNome());
-        assertNotNull(dados.getPopulacao());
-        assertNotNull(dados.getAreaTerritorial());
+        assertEquals("ES", dados.getUf());
+        assertEquals("Sudeste", dados.getRegiao());
     }
 }

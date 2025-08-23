@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,23 +24,55 @@ public class IBGEService {
     private static final String IBGE_LOCALIDADES_URL = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios";
     private static final String IBGE_AGREGADOS_URL = "https://servicodados.ibge.gov.br/api/v3/agregados";
 
+    // Cache simples para cidades já consultadas
+    private final Map<String, IBGECidadeDadosDTO> cacheCidade = new ConcurrentHashMap<>();
+
     @Autowired
     private RestTemplate restTemplate;
 
-    // Buscar município por nome
-    public Optional<IBGEMunicipioDTO> buscarMunicipioPorNome(String nome) {
+    // Buscar município por nome e UF (se informado)
+    public Optional<IBGEMunicipioDTO> buscarMunicipioPorNome(String nome, String uf) {
         try {
             String url = IBGE_LOCALIDADES_URL + "?nome=" + URLEncoder.encode(nome, StandardCharsets.UTF_8);
             ResponseEntity<IBGEMunicipioDTO[]> response = restTemplate.getForEntity(url, IBGEMunicipioDTO[].class);
-
             if (response.getBody() != null && response.getBody().length > 0) {
-                return Optional.of(response.getBody()[0]);
+                // Busca por nome exato (ignorando acentos e caixa)
+                String nomeBusca = removerAcentos(nome).trim().toLowerCase();
+                IBGEMunicipioDTO municipioExato = null;
+                for (IBGEMunicipioDTO m : response.getBody()) {
+                    String nomeMunicipio = removerAcentos(m.getNome()).trim().toLowerCase();
+                    boolean nomeIgual = nomeMunicipio.equals(nomeBusca);
+                    boolean ufIgual = true;
+                    if (uf != null && !uf.isBlank()) {
+                        String sigla = null;
+                        try {
+                            sigla = m.getMicrorregiao().getMesorregiao().getUF().getSigla();
+                        } catch (Exception ignore) {}
+                        ufIgual = uf.equalsIgnoreCase(sigla);
+                    }
+                    if (nomeIgual && ufIgual) {
+                        municipioExato = m;
+                        break;
+                    }
+                }
+                if (municipioExato != null) {
+                    return Optional.of(municipioExato);
+                } else {
+                    // Se não achou nome exato, retorna o primeiro
+                    return Optional.of(response.getBody()[0]);
+                }
             }
         } catch (Exception e) {
             System.err.println("Erro ao buscar município: " + e.getMessage());
         }
-
         return Optional.empty();
+    }
+
+    // Função utilitária para remover acentos
+    private String removerAcentos(String str) {
+        if (str == null) return null;
+        return java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD)
+            .replaceAll("[^\\p{ASCII}]", "");
     }
 
     // Buscar todos os municípios (para autocomplete)
@@ -146,27 +180,58 @@ public class IBGEService {
         return Optional.empty();
     }
 
-    // Metodo para buscar dados completos de uma cidade
+    // Metodo para buscar dados completos de uma cidade (com cache, logs e UF opcional)
     public Optional<IBGECidadeDadosDTO> buscarDadosCompletosCidade(String nomeCidade) {
-        Optional<IBGEMunicipioDTO> municipioOpt = buscarMunicipioPorNome(nomeCidade);
-        if (municipioOpt.isEmpty()) {
-            return Optional.empty();
+        return buscarDadosCompletosCidade(nomeCidade, null);
+    }
+
+    public Optional<IBGECidadeDadosDTO> buscarDadosCompletosCidade(String nomeCidade, String uf) {
+        String cacheKey = nomeCidade.trim().toLowerCase() + (uf != null ? ":" + uf.trim().toLowerCase() : "");
+        if (cacheCidade.containsKey(cacheKey)) {
+            System.out.println("[IBGEService] Cache hit para cidade: " + cacheKey);
+            return Optional.of(cacheCidade.get(cacheKey));
         }
-
-        IBGEMunicipioDTO municipio = municipioOpt.get();
-        Long codigoIBGE = municipio.getId();
-
-        Optional<Long> populacaoOpt = buscarPopulacao(codigoIBGE);
-        Optional<Double> pibPerCapitaOpt = buscarPIBPerCapita(codigoIBGE);
-        Optional<Double> areaTerritorialOpt = buscarAreaTerritorial(codigoIBGE);
-
+        System.out.println("[IBGEService] Buscando dados do IBGE para cidade: " + nomeCidade + (uf != null ? ", UF: " + uf : ""));
         IBGECidadeDadosDTO dto = new IBGECidadeDadosDTO();
-        dto.setNome(municipio.getNome());
-        dto.setUf(municipio.getMicrorregiao().getMesorregiao().getUF().getSigla());
-        dto.setPopulacao(populacaoOpt.orElse(null));
-        dto.setPibPerCapita(pibPerCapitaOpt.orElse(null));
-        dto.setAreaTerritorial(areaTerritorialOpt.orElse(null));
+        try {
+            Optional<IBGEMunicipioDTO> municipioOpt = buscarMunicipioPorNome(nomeCidade, uf);
+            if (municipioOpt.isEmpty()) {
+                System.err.println("[IBGEService] Município não encontrado: " + nomeCidade + (uf != null ? ", UF: " + uf : ""));
+                return Optional.empty();
+            }
+            IBGEMunicipioDTO municipio = municipioOpt.get();
+            dto.setNome(municipio.getNome());
+            // Checagem segura para UF e Região em múltiplos caminhos
+            String siglaUf = null;
+            String regiao = null;
+            try {
+                // Tenta pelo caminho microrregiao.mesorregiao.UF
+                if (municipio.getMicrorregiao() != null && municipio.getMicrorregiao().getMesorregiao() != null && municipio.getMicrorregiao().getMesorregiao().getUF() != null) {
+                    siglaUf = municipio.getMicrorregiao().getMesorregiao().getUF().getSigla();
+                    if (municipio.getMicrorregiao().getMesorregiao().getUF().getRegiao() != null) {
+                        regiao = municipio.getMicrorregiao().getMesorregiao().getUF().getRegiao().getNome();
+                    }
+                }
+                // Se não encontrou, tenta pelo caminho regiao-imediata.regiao-intermediaria.UF
+                if ((siglaUf == null || regiao == null) && municipio.getRegiaoImediata() != null && municipio.getRegiaoImediata().getRegiaoIntermediaria() != null && municipio.getRegiaoImediata().getRegiaoIntermediaria().getUF() != null) {
+                    if (siglaUf == null) {
+                        siglaUf = municipio.getRegiaoImediata().getRegiaoIntermediaria().getUF().getSigla();
+                    }
+                    if (regiao == null && municipio.getRegiaoImediata().getRegiaoIntermediaria().getUF().getRegiao() != null) {
+                        regiao = municipio.getRegiaoImediata().getRegiaoIntermediaria().getUF().getRegiao().getNome();
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("[IBGEService] Erro ao extrair UF/Região: " + e.getMessage());
+            }
+            dto.setUf(siglaUf);
+            dto.setRegiao(regiao);
 
+            // Não preenche mais populacao, pibPerCapita ou areaTerritorial
+        } catch (Exception e) {
+            System.err.println("[IBGEService] Erro inesperado ao buscar dados completos: " + e.getMessage());
+        }
+        cacheCidade.put(cacheKey, dto);
         return Optional.of(dto);
     }
 

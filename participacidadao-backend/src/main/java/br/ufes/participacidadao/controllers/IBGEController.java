@@ -41,10 +41,10 @@ public class IBGEController {
 
         if (uf != null) {
             municipios = ibgeService.buscarMunicipiosPorUF(uf);
-        } else if (nome != null) {
-            municipios = ibgeService.buscarMunicipioPorNome(nome)
-                    .map(Arrays::asList)
-                    .orElse(Collections.emptyList());
+    } else if (nome != null) {
+        municipios = ibgeService.buscarMunicipioPorNome(nome, null)
+            .map(Arrays::asList)
+            .orElse(Collections.emptyList());
         } else {
             municipios = ibgeService.buscarTodosMunicipios();
         }

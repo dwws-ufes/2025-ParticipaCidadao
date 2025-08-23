@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import br.ufes.participacidadao.dto.IBGECidadeDadosDTO;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -17,6 +18,9 @@ public class LinkedDataService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private IBGEService ibgeService;
 
     public DadosEnriquecidos enriquecerDadosCidade(String nomeCidade) {
 
@@ -62,10 +66,18 @@ public class LinkedDataService {
     // }
 
     private Map<String, Object> buscarDadosIBGE(String nomeCidade) {
-
         Map<String, Object> r = new HashMap<>();
-        r.put("nome", nomeCidade);
-
+        try {
+            var dadosOpt = ibgeService.buscarDadosCompletosCidade(nomeCidade);
+            if (dadosOpt.isPresent()) {
+                IBGECidadeDadosDTO dados = dadosOpt.get();
+                r.put("nome", dados.getNome());
+                r.put("uf", dados.getUf());
+                r.put("regiao", dados.getRegiao());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return r;
     }
 

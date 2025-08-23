@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.ufes.participacidadao.models.IssueModel;
 
 import br.ufes.participacidadao.repositories.IssueRepository;
-import br.ufes.participacidadao.services.LinkedDataService;
 import br.ufes.participacidadao.services.IssueRdfService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,20 +26,12 @@ public class IssueController {
     private IssueRepository issueRepository;
 
     @Autowired
-    private LinkedDataService linkedDataService;
-
-    @Autowired
     private IssueRdfService issueRdfService;
 
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/new")
     public IssueModel createIssue(@RequestBody IssueModel issueModel) {
-        // Enriquecer dados da cidade ao criar issue
-        if (issueModel.getCity() != null && !issueModel.getCity().isEmpty()) {
-            var dados = linkedDataService.enriquecerDadosCidade(issueModel.getCity());
-            issueModel.setDadosEnriquecidos(dados);
-        }
         return this.issueRepository.save(issueModel);
     }
 

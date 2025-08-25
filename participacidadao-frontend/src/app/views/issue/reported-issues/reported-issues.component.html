@@ -16,6 +16,33 @@
           <strong>({{ issue.status }})</strong>
         </div>
       </div>
+      <!-- Dados enriquecidos IBGE -->
+      <div>
+        <button cButton class="btn btn-outline-info btn-sm mb-2" (click)="enriquecerIssue(issue)">
+          Enriquecer dados IBGE
+        </button>
+        <div *ngIf="issue.dadosEnriquecidos">
+          <hr>
+          <div class="mb-1"><strong>Dados IBGE:</strong></div>
+          <div *ngIf="issue.dadosEnriquecidos.nome"><strong>Nome:</strong> {{ issue.dadosEnriquecidos.nome }}</div>
+          <div *ngIf="issue.dadosEnriquecidos.uf"><strong>UF:</strong> {{ issue.dadosEnriquecidos.uf }}</div>
+          <div *ngIf="issue.dadosEnriquecidos.populacao"><strong>População:</strong> {{ issue.dadosEnriquecidos.populacao | number }}</div>
+          <div *ngIf="issue.dadosEnriquecidos.area || issue.dadosEnriquecidos.areaTerritorial">
+            <strong>Área:</strong>
+            {{ issue.dadosEnriquecidos.area ? (issue.dadosEnriquecidos.area | number:'1.2-2') : (issue.dadosEnriquecidos.areaTerritorial | number:'1.2-2') }} km²
+          </div>
+          <div *ngIf="issue.dadosEnriquecidos.pibPerCapita"><strong>PIB per capita:</strong> {{ issue.dadosEnriquecidos.pibPerCapita | currency:'BRL' }}</div>
+          <div *ngIf="issue.dadosEnriquecidos.regiao"><strong>Região:</strong> {{ issue.dadosEnriquecidos.regiao }}</div>
+          <div *ngIf="issue.dadosEnriquecidos.dbpediaUri"><a [href]="issue.dadosEnriquecidos.dbpediaUri" target="_blank">DBpedia</a></div>
+          <div *ngIf="issue.dadosEnriquecidos.wikidataUri"><a [href]="issue.dadosEnriquecidos.wikidataUri" target="_blank">Wikidata</a></div>
+          <!-- Exibe outros campos genéricos se existirem -->
+          <div *ngFor="let key of getOutrosCampos(issue.dadosEnriquecidos)">
+            <div *ngIf="issue.dadosEnriquecidos[key] && key !== 'nome' && key !== 'uf' && key !== 'populacao' && key !== 'area' && key !== 'areaTerritorial' && key !== 'pibPerCapita' && key !== 'regiao' && key !== 'dbpediaUri' && key !== 'wikidataUri'">
+              <strong>{{ key }}:</strong> {{ issue.dadosEnriquecidos[key] }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div *ngIf="!issues.length && !error" class="mb-2">Nenhum problema relatado.</div>

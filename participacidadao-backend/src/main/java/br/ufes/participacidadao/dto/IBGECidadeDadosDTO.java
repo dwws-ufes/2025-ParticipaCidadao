@@ -3,9 +3,14 @@ package br.ufes.participacidadao.dto;
 public class IBGECidadeDadosDTO {
     private String nome;
     private String uf;
-    private Long populacao;
-    private Double pibPerCapita;
-    private Double areaTerritorial;
+    private String regiao;
+    public String getRegiao() {
+        return regiao;
+    }
+
+    public void setRegiao(String regiao) {
+        this.regiao = regiao;
+    }
 
     // Getters e Setters
     public String getNome() {
@@ -24,27 +29,4 @@ public class IBGECidadeDadosDTO {
         this.uf = uf;
     }
 
-    public Long getPopulacao() {
-        return populacao;
-    }
-
-    public void setPopulacao(Long populacao) {
-        this.populacao = populacao;
-    }
-
-    public Double getPibPerCapita() {
-        return pibPerCapita;
-    }
-
-    public void setPibPerCapita(Double pibPerCapita) {
-        this.pibPerCapita = pibPerCapita;
-    }
-
-    public Double getAreaTerritorial() {
-        return areaTerritorial;
-    }
-
-    public void setAreaTerritorial(Double areaTerritorial) {
-        this.areaTerritorial = areaTerritorial;
-    }
 }

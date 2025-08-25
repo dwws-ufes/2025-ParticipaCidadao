@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight
                         .requestMatchers(HttpMethod.POST, "/users/new").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/ibge/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/ibge/**", "/api/cities/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/issues/rdf").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/auth/check").authenticated()
                         .requestMatchers(HttpMethod.POST, "/issues/new").authenticated()
